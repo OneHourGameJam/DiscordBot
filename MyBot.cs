@@ -37,20 +37,19 @@ namespace Discord_Bot
 			});
 			#endregion
 
-			//OHGJ_CreateTimeCommand("time");
-			//OHGJ_CreateThemeCommand("theme");
 
-			GetJamInfo();
 
 			#region Commands
 			random = new Random();
 			commands = discord.GetService<CommandService>();
 
-
 			INIT("set");
+
+			OHGJ_CreateTimeCommand("time");
+			OHGJ_CreateThemeCommand("theme");
 			#endregion
 
-			
+
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
@@ -121,13 +120,17 @@ namespace Discord_Bot
 
 			commands.CreateCommand(command).Do(async e =>
 			{
-				await e.Channel.SendMessage("Theme!");
+				string response = "The theme " + GetJamInfo(1);
+				
+
+
+				await e.Channel.SendMessage(response);
 			});
 		}
 
 		#endregion
 
-		private string GetJamInfo()
+		private string GetJamInfo(int infoIndex)
 		{
 			string jams;
 
@@ -157,11 +160,43 @@ namespace Discord_Bot
 			// 3 -- Current Time
 			// 4 -- Time difference
 
-			Console.WriteLine(IsJamOn(Info[1]));
+
+			#region Debug
+			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017 - 04 - 29 20:00:00\",\"now\":\"2017 - 04 - 29 20:30:00\",\"timediff\":\" - 1800\"}";
+
+			//if (infoIndex == 1)
+			//{
+			//	if (IsJamOn(test))
+			//	{
+			//		response = "is: " + GetCurrentJams(test, 1);
+			//	}
+			//	else
+			//	{
+			//		response = "hasn't been announced yet.";
+			//	}
+
+			//}
+			#endregion
+
+			string response = "";
+
+			if (infoIndex == 1)
+			{
+				if (IsJamOn(Info[1]))
+				{
+					response = "is: " + GetCurrentJams(Info[1], 1);
+				}
+				else
+				{
+					response = "hasn't been announced yet.";
+				}
+
+			}
 
 
 
-			return "";
+
+			return response;
 		}
 
 		private string GetUpcomingJam(string jams, int index)
@@ -201,7 +236,7 @@ namespace Discord_Bot
 
 		private string GetCurrentJams(string jam, int index)
 		{
-				string jams = jam.Remove(0, 16);
+				string jams = jam.Remove(0, 17);
 
 				jams = jams.Replace("}", "");
 
@@ -240,11 +275,12 @@ namespace Discord_Bot
 
 		private bool IsJamOn(string jam)
 		{
+			//Console.WriteLine(jam);
 			string test = jam.Remove(0, 16);
 
 			if (test == "")
 			{
-				Console.WriteLine("No current jam");
+				//Console.WriteLine("No current jam");
 				return false;
 			}
 			else
