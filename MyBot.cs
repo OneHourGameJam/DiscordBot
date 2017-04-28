@@ -37,20 +37,19 @@ namespace Discord_Bot
 			});
 			#endregion
 
-			//OHGJ_CreateTimeCommand("time");
-			//OHGJ_CreateThemeCommand("theme");
 
-			GetJamInfo();
 
 			#region Commands
 			random = new Random();
 			commands = discord.GetService<CommandService>();
 
-
 			INIT("set");
+
+			OHGJ_CreateTimeCommand("time");
+			OHGJ_CreateThemeCommand("theme");
 			#endregion
 
-			
+
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
@@ -121,24 +120,172 @@ namespace Discord_Bot
 
 			commands.CreateCommand(command).Do(async e =>
 			{
-				await e.Channel.SendMessage("Theme!");
+				string response = "The theme " + GetJamInfo(1);
+				
+
+
+				await e.Channel.SendMessage(response);
 			});
 		}
 
 		#endregion
 
-		private string GetJamInfo()
+		private string GetJamInfo(int infoIndex)
 		{
 			string jams;
 
 			jams = client.DownloadString("http://onehourgamejam.com/api/nextjam");
-			int i = jams.IndexOf("}],\"current_jams\"");
+
+			string[] info = jams.Split(new string[] { "]," }, StringSplitOptions.None);
+
+			Dictionary<int, string> Info = new Dictionary<int, string>();
+			Info.Add(0, info[0]); // 0 -- Upcoming jams
+			Info.Add(1, info[1]); // 1 -- Current jams
+			Info.Add(2, info[2]); // 2 -- Previous jams
+
+			//foreach (var item in Info)
+			//{
+			//	Console.WriteLine(item);
+			//}
+
+			//------jamIndex----
+			// 0 -- Upcoming jams
+			// 1 -- Current jams
+			// 2 -- Previous jams
+
+			//-----infoIndex-----
+			// 0 -- Jam number
+			// 1 -- Theme
+			// 2 -- Start Time
+			// 3 -- Current Time
+			// 4 -- Time difference
+
+
+			#region Debug
+			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017 - 04 - 29 20:00:00\",\"now\":\"2017 - 04 - 29 20:30:00\",\"timediff\":\" - 1800\"}";
+
+			//if (infoIndex == 1)
+			//{
+			//	if (IsJamOn(test))
+			//	{
+			//		response = "is: " + GetCurrentJams(test, 1);
+			//	}
+			//	else
+			//	{
+			//		response = "hasn't been announced yet.";
+			//	}
+
+			//}
+			#endregion
+
+			string response = "";
+
+			if (infoIndex == 1)
+			{
+				if (IsJamOn(Info[1]))
+				{
+					response = "is: " + GetCurrentJams(Info[1], 1);
+				}
+				else
+				{
+					response = "hasn't been announced yet.";
+				}
+
+			}
 
 
 
-			 Console.WriteLine(i);
 
-			return "";
+			return response;
+		}
+
+		private string GetUpcomingJam(string jams, int index)
+		{
+			jams = jams.Remove(0, 19);
+			jams = jams.Replace("}", "");
+
+			string[] info = jams.Split(',');
+
+			Dictionary<int, string> Info = new Dictionary<int, string>();
+
+			int i = 0;
+			foreach (var item in info)
+			{
+				string[] s = item.Split(new string[] { "\":\"" }, StringSplitOptions.None);
+				string S = s[1].Remove(s[1].Length - 1);
+
+
+				Info.Add(i, S);
+				i++;				
+			}
+
+			//foreach (var item in Info)
+			//{
+			//	Console.WriteLine(item);
+			//}
+
+
+			// 0 -- Jam number
+			// 1 -- Theme
+			// 2 -- Start Time
+			// 3 -- Current Time
+			// 4 -- Time difference
+
+			return Info[index];
+		}
+
+		private string GetCurrentJams(string jam, int index)
+		{
+				string jams = jam.Remove(0, 17);
+
+				jams = jams.Replace("}", "");
+
+				string[] info = jams.Split(',');
+
+				Dictionary<int, string> Info = new Dictionary<int, string>();
+
+				int i = 0;
+				foreach (var item in info)
+				{
+					string[] s = item.Split(new string[] { "\":\"" }, StringSplitOptions.None);
+					string S = s[1].Remove(s[1].Length - 1);
+
+
+					Info.Add(i, S);
+					i++;
+				}
+
+				
+
+
+
+			foreach (var item in Info)
+			{
+				Console.WriteLine(item);
+			}
+
+			// 0 -- Jam number
+			// 1 -- Theme
+			// 2 -- Start Time
+			// 3 -- Current Time
+			// 4 -- Time difference
+
+			return Info[index];
+		}
+
+		private bool IsJamOn(string jam)
+		{
+			//Console.WriteLine(jam);
+			string test = jam.Remove(0, 16);
+
+			if (test == "")
+			{
+				//Console.WriteLine("No current jam");
+				return false;
+			}
+			else
+				return true;
+
 		}
 	}
 }
