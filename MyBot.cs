@@ -214,11 +214,11 @@ namespace Discord_Bot
 			{
 				if (IsJamOn(Info[1]))
 				{
-					response = GetTime(GetCurrentJams(Info[1], 4)) + " left.";
+					response = GetTime(GetCurrentJams(Info[1], 4), true) + " left.";
 				}
 				else
 				{
-					response = GetTime(GetCurrentJams(Info[0], 4)) + " until the jam.";
+					response = GetTime(GetCurrentJams(Info[0], 4), false) + " until the next jam.";
 				}
 			}
 			#endregion
@@ -316,24 +316,41 @@ namespace Discord_Bot
 
 		}
 
-		private string GetTime(string time)
+		private string GetTime(string time, bool jamOn)
 		{
 			int i = Int32.Parse(time);
-			i = Math.Abs(i);
-
 			string response = "";
+			
 
-			if (i / 60 < 1) // SEC
-				response = i.ToString() + " Second(s)";
+			if (jamOn == false)
+			{
+				
+				i = Math.Abs(i);
 
-			if (i / 60 >= 1) // MIN
-				response = response = (i / 60).ToString() + " Minute(s)";
+				if (i / 60 < 1) // SEC
+					response = i.ToString() + " Second(s)";
 
-			if (i / 3600 >= 1) // HOUR
-				response = response = (i / 3600).ToString() + " Hour(s)";
+				if (i / 60 >= 1) // MIN
+					response = response = (i / 60).ToString() + " Minute(s)";
 
-			if (i / 86400 >= 1) // DAY
-				response = response = (i / 86400).ToString() + " Day(s)";
+				if (i / 3600 >= 1) // HOUR
+					response = response = (i / 3600).ToString() + " Hour(s)";
+
+				if (i / 86400 >= 1) // DAY
+					response = response = (i / 86400).ToString() + " Day(s)";
+	
+			}
+
+
+			else
+			{
+
+				if (i / 60 < 1) // SEC
+					response = i.ToString() + " Second(s)";
+
+				if ((3600 + i) / 60 >= 1) // MIN
+					response = response = ((3600 + i) / 60).ToString() + " Minute(s)";
+			}
 
 			return response;
 		}
