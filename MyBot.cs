@@ -132,13 +132,124 @@ namespace Discord_Bot
 			string jams;
 
 			jams = client.DownloadString("http://onehourgamejam.com/api/nextjam");
-			int i = jams.IndexOf("}],\"current_jams\"");
+
+			string[] info = jams.Split(new string[] { "]," }, StringSplitOptions.None);
+
+			Dictionary<int, string> Info = new Dictionary<int, string>();
+			Info.Add(0, info[0]); // 0 -- Upcoming jams
+			Info.Add(1, info[1]); // 1 -- Current jams
+			Info.Add(2, info[2]); // 2 -- Previous jams
+
+			//foreach (var item in Info)
+			//{
+			//	Console.WriteLine(item);
+			//}
+
+			//------jamIndex----
+			// 0 -- Upcoming jams
+			// 1 -- Current jams
+			// 2 -- Previous jams
+
+			//-----infoIndex-----
+			// 0 -- Jam number
+			// 1 -- Theme
+			// 2 -- Start Time
+			// 3 -- Current Time
+			// 4 -- Time difference
+
+			Console.WriteLine(IsJamOn(Info[1]));
 
 
-
-			 Console.WriteLine(i);
 
 			return "";
+		}
+
+		private string GetUpcomingJam(string jams, int index)
+		{
+			jams = jams.Remove(0, 19);
+			jams = jams.Replace("}", "");
+
+			string[] info = jams.Split(',');
+
+			Dictionary<int, string> Info = new Dictionary<int, string>();
+
+			int i = 0;
+			foreach (var item in info)
+			{
+				string[] s = item.Split(new string[] { "\":\"" }, StringSplitOptions.None);
+				string S = s[1].Remove(s[1].Length - 1);
+
+
+				Info.Add(i, S);
+				i++;				
+			}
+
+			//foreach (var item in Info)
+			//{
+			//	Console.WriteLine(item);
+			//}
+
+
+			// 0 -- Jam number
+			// 1 -- Theme
+			// 2 -- Start Time
+			// 3 -- Current Time
+			// 4 -- Time difference
+
+			return Info[index];
+		}
+
+		private string GetCurrentJams(string jam, int index)
+		{
+				string jams = jam.Remove(0, 16);
+
+				jams = jams.Replace("}", "");
+
+				string[] info = jams.Split(',');
+
+				Dictionary<int, string> Info = new Dictionary<int, string>();
+
+				int i = 0;
+				foreach (var item in info)
+				{
+					string[] s = item.Split(new string[] { "\":\"" }, StringSplitOptions.None);
+					string S = s[1].Remove(s[1].Length - 1);
+
+
+					Info.Add(i, S);
+					i++;
+				}
+
+				
+
+
+
+			foreach (var item in Info)
+			{
+				Console.WriteLine(item);
+			}
+
+			// 0 -- Jam number
+			// 1 -- Theme
+			// 2 -- Start Time
+			// 3 -- Current Time
+			// 4 -- Time difference
+
+			return Info[index];
+		}
+
+		private bool IsJamOn(string jam)
+		{
+			string test = jam.Remove(0, 16);
+
+			if (test == "")
+			{
+				Console.WriteLine("No current jam");
+				return false;
+			}
+			else
+				return true;
+
 		}
 	}
 }
