@@ -53,7 +53,7 @@ namespace Discord_Bot
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
-				await discord.Connect("MzA3MjAxMDIwNzQ2NzkyOTcx.C-PCmQ.SwBizq971xb0uJTKN4Jq5nezAqg", TokenType.Bot);
+				await discord.Connect("MzA3NTkwMDI4MTUzMDYxMzc2.C-UhEw.fpvCBJ1gg9F-jsWigJ0GQz0aDTw", TokenType.Bot);
 			});
 			#endregion
 		}
@@ -111,7 +111,9 @@ namespace Discord_Bot
 		{
 			commands.CreateCommand(command).Do(async e =>
 			{
-				await e.Channel.SendMessage("Time!");
+				string response = GetJamInfo(4);
+
+				await e.Channel.SendMessage(response);
 			});
 		}
 
@@ -121,8 +123,6 @@ namespace Discord_Bot
 			commands.CreateCommand(command).Do(async e =>
 			{
 				string response = "The theme " + GetJamInfo(1);
-				
-
 
 				await e.Channel.SendMessage(response);
 			});
@@ -160,9 +160,11 @@ namespace Discord_Bot
 			// 3 -- Current Time
 			// 4 -- Time difference
 
+			string response = "";
+
 
 			#region Debug
-			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017 - 04 - 29 20:00:00\",\"now\":\"2017 - 04 - 29 20:30:00\",\"timediff\":\" - 1800\"}";
+			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017 - 04 - 29 20:00:00\",\"now\":\"2017 - 04 - 29 20:30:00\",\"timediff\":\"-1800\"}";
 
 			//if (infoIndex == 1)
 			//{
@@ -176,10 +178,23 @@ namespace Discord_Bot
 			//	}
 
 			//}
+
+			//if (infoIndex == 4)
+			//{
+			//	if (true)
+			//	{
+			//		response = GetTime(GetCurrentJams(test, 4)) + " left.";
+			//	}
+			//	else
+			//	{
+			//		response = GetTime(GetCurrentJams(test, 4)) + " until the jam.";
+			//	}
+			//}
+
 			#endregion
 
-			string response = "";
 
+			#region Theme
 			if (infoIndex == 1)
 			{
 				if (IsJamOn(Info[1]))
@@ -192,8 +207,21 @@ namespace Discord_Bot
 				}
 
 			}
+			#endregion
 
-
+			#region Time
+			else if (infoIndex == 4)
+			{
+				if (IsJamOn(Info[1]))
+				{
+					response = GetTime(GetCurrentJams(Info[1], 4)) + " left.";
+				}
+				else
+				{
+					response = GetTime(GetCurrentJams(Info[0], 4)) + " until the jam.";
+				}
+			}
+			#endregion
 
 
 			return response;
@@ -259,10 +287,10 @@ namespace Discord_Bot
 
 
 
-			foreach (var item in Info)
-			{
-				Console.WriteLine(item);
-			}
+			//foreach (var item in Info)
+			//{
+			//	Console.WriteLine(item);
+			//}
 
 			// 0 -- Jam number
 			// 1 -- Theme
@@ -286,6 +314,28 @@ namespace Discord_Bot
 			else
 				return true;
 
+		}
+
+		private string GetTime(string time)
+		{
+			int i = Int32.Parse(time);
+			i = Math.Abs(i);
+
+			string response = "";
+
+			if (i / 60 < 1) // SEC
+				response = i.ToString() + " Second(s)";
+
+			if (i / 60 >= 1) // MIN
+				response = response = (i / 60).ToString() + " Minute(s)";
+
+			if (i / 3600 >= 1) // HOUR
+				response = response = (i / 3600).ToString() + " Hour(s)";
+
+			if (i / 86400 >= 1) // DAY
+				response = response = (i / 86400).ToString() + " Day(s)";
+
+			return response;
 		}
 	}
 }
