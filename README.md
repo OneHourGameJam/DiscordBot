@@ -1,5 +1,16 @@
 # Discord-Bot
 
+------------IsJamOn------------------------------
+string jam -- Here you input the current_jams Text
+
+
+604800 - Time in seconds between two jams (7 days)
+
+Upcoming jam (604,800 - 3600 >= timediff >= 0) RETURN FALSE
+
+Curent Jam (-3600 <= timediff =< 0) RETURN TRUE
+
+
 -------------GetJamInfo--------------------------
 
 {"upcoming_jams":[{....} // 0 - Upcoming Jam
