@@ -53,7 +53,7 @@ namespace Discord_Bot
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
-				await discord.Connect("MzA3NTkwMDI4MTUzMDYxMzc2.C-UhEw.fpvCBJ1gg9F-jsWigJ0GQz0aDTw", TokenType.Bot);
+				await discord.Connect("", TokenType.Bot); // Please insert token here
 			});
 			#endregion
 		}
