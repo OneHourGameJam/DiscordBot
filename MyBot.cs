@@ -53,7 +53,7 @@ namespace Discord_Bot
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
-				await discord.Connect("", TokenType.Bot); // Please insert token here
+				await discord.Connect("", TokenType.Bot);
 			});
 			#endregion
 		}
@@ -164,7 +164,7 @@ namespace Discord_Bot
 
 
 			#region Debug
-			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017 - 04 - 29 20:00:00\",\"now\":\"2017 - 04 - 29 20:30:00\",\"timediff\":\"-1800\"}";
+			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017-04-29 20:00:00\",\"now\":\"2017-04-29 20:30:00\",\"timediff\":\"-272586\"}";
 
 			//if (infoIndex == 1)
 			//{
@@ -181,13 +181,13 @@ namespace Discord_Bot
 
 			//if (infoIndex == 4)
 			//{
-			//	if (true)
+			//	if (IsJamOn(Info[1]))
 			//	{
-			//		response = GetTime(GetCurrentJams(test, 4)) + " left.";
+			//		response = GetTime(GetCurrentJams(test, 4), true) + " left.";
 			//	}
 			//	else
 			//	{
-			//		response = GetTime(GetCurrentJams(test, 4)) + " until the jam.";
+			//		response = GetTime(GetCurrentJams(test, 4), false) + " until the jam.";
 			//	}
 			//}
 
@@ -218,7 +218,7 @@ namespace Discord_Bot
 				}
 				else
 				{
-					response = GetTime(GetCurrentJams(Info[0], 4), false) + " until the next jam.";
+					response = GetTime(GetCurrentJams(Info[0], 4), false) + " left until the next jam.";
 				}
 			}
 			#endregion
@@ -328,34 +328,66 @@ namespace Discord_Bot
 				i = Math.Abs(i);
 
 				if (i / 60 < 1) // SEC
-					response = i.ToString() + " Second(s)";
+					response = i.ToString() + " second" + theSthing(i);
 
 				if (i / 60 >= 1) // MIN
-					response = response = (i / 60).ToString() + " Minute(s)";
-
+				{
+					response = (i / 60).ToString() + " minute" + theSthing(i / 60);
+					int sec = (i % 60);					
+					response += " " + sec + " second" + theSthing(sec);
+				}
+					
 				if (i / 3600 >= 1) // HOUR
-					response = response = (i / 3600).ToString() + " Hour(s)";
+				{
+					response= (i / 3600).ToString() + " hour" + theSthing(i / 3600);
+					int min = (i % 3600) / 60;
+					response += " " + min + " minute" + theSthing(min);
+				}
 
 				if (i / 86400 >= 1) // DAY
-					response = response = (i / 86400).ToString() + " Day(s)";
-	
+				{
+					response = (i / 86400).ToString() + " day" + theSthing(i / 86400);
+
+					int hour = (i % 86400) / 3600;
+					response += " " + hour + " hour" + theSthing(hour);
+
+					int min = ((i % 86400) % 3600) / 60;
+					response += " " + min + " minute" + theSthing(min);
+				}
+
 			}
-
-
 			else
 			{
 
 				if (i / 60 < 1) // SEC
-					response = i.ToString() + " Second(s)";
+					response = i.ToString() + " second" + theSthing(i);
 
 				if ((3600 + i) / 60 >= 1) // MIN
-					response = response = ((3600 + i) / 60).ToString() + " Minute(s)";
+				{
+					response = ((3600 + i) / 60).ToString() + " minute" + theSthing((3600 + i) / 60);
+
+					int sec = ((3600 + i) % 60);
+					response += " " + sec + " second" + theSthing(sec);
+				}
+			}
+
+			return response;
+		}
+
+
+		private string theSthing(int i)
+		{
+			string response = "";
+			if (i == 1)
+			{
+				response = "";
+			}
+			else
+			{
+				response = "s";
 			}
 
 			return response;
 		}
 	}
 }
-
-
-
