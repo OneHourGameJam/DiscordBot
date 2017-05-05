@@ -43,7 +43,7 @@ namespace Discord_Bot
 			commands = discord.GetService<CommandService>();
 
 
-			INIT("set");
+			SetCommand_INIT("set");
 
 			OHGJ_CreateTimeCommand("time");
 			OHGJ_CreateThemeCommand("theme");
@@ -59,14 +59,15 @@ namespace Discord_Bot
 				await discord.Connect("", TokenType.Bot); //Insert token here
 			});
 			#endregion
+
+
+			INIT();
 		}
 
 		private void Log(object sender, LogMessageEventArgs e)
 		{
 			Console.WriteLine(e.Message);
 		}
-
-
 
 		#region Other Commands
 		private void CreateTextCommand(string command, string response)
@@ -88,16 +89,15 @@ namespace Discord_Bot
 					});
 		}
 
-		private void INIT(string command)
+		private void SetCommand_INIT(string command)
 		{
 			commands.CreateCommand(command).Do(
 				async (e) =>
 				{
 
-						Game game = new Game("One Hour Game Yam");
-						discord.SetGame(game);
+					INIT();
 
-						await e.Channel.SendMessage("All Set!");
+					await e.Channel.SendMessage("All Set!");
 
 
 				});
@@ -250,7 +250,7 @@ namespace Discord_Bot
 				//Console.WriteLine(item);
 				string[] s = item.Split(new string[] { "\":" }, StringSplitOptions.None);
 				string S = s[1]; //.Remove(s[1].Length - 1);
-				Console.WriteLine(S);
+				//Console.WriteLine(S);
 
 				Info.Add(i, S);
 				i++;
@@ -291,10 +291,10 @@ namespace Discord_Bot
 				i++;
 			}
 
-			foreach (var item in Info)
-			{
-				Console.WriteLine(item);
-			}
+			//foreach (var item in Info)
+			//{
+			//	Console.WriteLine(item);
+			//}
 
 			// 0 -- Jam number
 			// 1 -- Theme
@@ -403,6 +403,12 @@ namespace Discord_Bot
 
 		#endregion
 
+
+		private void INIT()
+		{
+			Game game = new Game("One Hour Game Yam");
+			discord.SetGame(game);
+		}
 	}
 }
 
