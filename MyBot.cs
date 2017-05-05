@@ -12,14 +12,13 @@ namespace Discord_Bot
 {
 	class MyBot
 	{
-		DiscordClient discord;
-		CommandService commands;
+		private DiscordClient discord;
+		private CommandService commands;
 
-		Random random;
+		private Random random;
 
-		WebClient client = new WebClient();
+		private WebClient client = new WebClient();
 
-		bool set = false;
 
 
 		public MyBot()
@@ -43,17 +42,21 @@ namespace Discord_Bot
 			random = new Random();
 			commands = discord.GetService<CommandService>();
 
+
 			INIT("set");
 
 			OHGJ_CreateTimeCommand("time");
 			OHGJ_CreateThemeCommand("theme");
+
+
+
 			#endregion
 
 
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
-				await discord.Connect("", TokenType.Bot);
+				await discord.Connect("", TokenType.Bot); //Insert token here
 			});
 			#endregion
 		}
@@ -90,15 +93,12 @@ namespace Discord_Bot
 			commands.CreateCommand(command).Do(
 				async (e) =>
 				{
-					if (set == false)
-					{
+
 						Game game = new Game("One Hour Game Yam");
 						discord.SetGame(game);
 
 						await e.Channel.SendMessage("All Set!");
 
-						set = true;
-					}
 
 				});
 		}
@@ -117,7 +117,7 @@ namespace Discord_Bot
 			});
 		}
 
-		private void OHGJ_CreateThemeCommand(string command) //DONE!
+		private void OHGJ_CreateThemeCommand(string command)
 		{
 
 			commands.CreateCommand(command).Do(async e =>
@@ -130,6 +130,8 @@ namespace Discord_Bot
 
 		#endregion
 
+		#region One Hour Game Jam
+
 		private string GetJamInfo(int infoIndex)
 		{
 			string jams;
@@ -137,11 +139,17 @@ namespace Discord_Bot
 			jams = client.DownloadString("http://onehourgamejam.com/api/nextjam");
 
 			string[] info = jams.Split(new string[] { "]," }, StringSplitOptions.None);
+			string now = GetNow(info[0]);
+
+			string upcoming = info[0];
+			upcoming = upcoming.Remove(0, 29);
+			//Console.WriteLine(upcoming);
 
 			Dictionary<int, string> Info = new Dictionary<int, string>();
-			Info.Add(0, info[0]); // 0 -- Upcoming jams
+			Info.Add(0, upcoming); // 0 -- Upcoming jams
 			Info.Add(1, info[1]); // 1 -- Current jams
 			Info.Add(2, info[2]); // 2 -- Previous jams
+			Info.Add(3, now);     // 3 -- Now
 
 			//foreach (var item in Info)
 			//{
@@ -154,17 +162,13 @@ namespace Discord_Bot
 			// 2 -- Previous jams
 
 			//-----infoIndex-----
-			// 0 -- Jam number
 			// 1 -- Theme
-			// 2 -- Start Time
-			// 3 -- Current Time
 			// 4 -- Time difference
 
 			string response = "";
 
-
 			#region Debug
-			//string test = "\"current_jams\":[{\"number\":\"105\",\"theme\":\"Random Theme by Devil\",\"start_datetime\":\"2017-04-29 20:00:00\",\"now\":\"2017-04-29 20:30:00\",\"timediff\":\"-272586\"}";
+			//string test = "\"current_jams\":[{\"number\":106,\"theme\":\"Gold\",\"start_datetime\":\"2017-05-06 20:00:00\",\"timediff\":-1800}";
 
 			//if (infoIndex == 1)
 			//{
@@ -181,13 +185,14 @@ namespace Discord_Bot
 
 			//if (infoIndex == 4)
 			//{
-			//	if (IsJamOn(Info[1]))
+			//	if (IsJamOn(test))
 			//	{
-			//		response = GetTime(GetCurrentJams(test, 4), true) + " left.";
+			//		//Console.WriteLine(Info[0]);
+			//		response = GetTime(GetCurrentJams(test, 3), true) + " left.";
 			//	}
 			//	else
 			//	{
-			//		response = GetTime(GetCurrentJams(test, 4), false) + " until the jam.";
+			//		response = GetTime(GetUpcomingJam(test, 3), false) + " until the jam.";
 			//	}
 			//}
 
@@ -212,20 +217,23 @@ namespace Discord_Bot
 			#region Time
 			else if (infoIndex == 4)
 			{
-				if (IsJamOn(Info[1]))
+				if (IsJamOn(Info[1])) // The jam is on!
 				{
-					response = GetTime(GetCurrentJams(Info[1], 4), true) + " left.";
+					response = GetTime(GetCurrentJams(Info[1], 3), true) + " left.";
 				}
 				else
 				{
-					response = GetTime(GetCurrentJams(Info[0], 4), false) + " left until the next jam.";
+					//Console.WriteLine("Jam not on");
+					response = GetTime(GetUpcomingJam(Info[0], 3), false) + " left until the next jam.";
 				}
 			}
 			#endregion
 
 
+
 			return response;
 		}
+		
 
 		private string GetUpcomingJam(string jams, int index)
 		{
@@ -239,12 +247,13 @@ namespace Discord_Bot
 			int i = 0;
 			foreach (var item in info)
 			{
-				string[] s = item.Split(new string[] { "\":\"" }, StringSplitOptions.None);
-				string S = s[1].Remove(s[1].Length - 1);
-
+				//Console.WriteLine(item);
+				string[] s = item.Split(new string[] { "\":" }, StringSplitOptions.None);
+				string S = s[1]; //.Remove(s[1].Length - 1);
+				Console.WriteLine(S);
 
 				Info.Add(i, S);
-				i++;				
+				i++;
 			}
 
 			//foreach (var item in Info)
@@ -256,56 +265,58 @@ namespace Discord_Bot
 			// 0 -- Jam number
 			// 1 -- Theme
 			// 2 -- Start Time
-			// 3 -- Current Time
-			// 4 -- Time difference
+			// 3 -- Time difference
 
 			return Info[index];
 		}
 
 		private string GetCurrentJams(string jam, int index)
 		{
-				string jams = jam.Remove(0, 17);
+			string jams = jam.Remove(0, 17);
 
-				jams = jams.Replace("}", "");
+			jams = jams.Replace("}", "");
 
-				string[] info = jams.Split(',');
+			string[] info = jams.Split(',');
 
-				Dictionary<int, string> Info = new Dictionary<int, string>();
+			Dictionary<int, string> Info = new Dictionary<int, string>();
 
-				int i = 0;
-				foreach (var item in info)
-				{
-					string[] s = item.Split(new string[] { "\":\"" }, StringSplitOptions.None);
-					string S = s[1].Remove(s[1].Length - 1);
-
-
-					Info.Add(i, S);
-					i++;
-				}
-
-				
+			int i = 0;
+			foreach (var item in info)
+			{
+				string[] s = item.Split(new string[] { "\":" }, StringSplitOptions.None);
+				string S = s[1];//.Remove(s[1].Length - 1);
 
 
+				Info.Add(i, S);
+				i++;
+			}
 
-			//foreach (var item in Info)
-			//{
-			//	Console.WriteLine(item);
-			//}
+			foreach (var item in Info)
+			{
+				Console.WriteLine(item);
+			}
 
 			// 0 -- Jam number
 			// 1 -- Theme
 			// 2 -- Start Time
-			// 3 -- Current Time
-			// 4 -- Time difference
+			// 3 -- Time difference
 
 			return Info[index];
 		}
 
+		private string GetNow(string str)
+		{
+			string[] time = str.Split(new string[] { "," }, StringSplitOptions.None);
+
+			string now = time[0].Replace("{\"now\":\"", String.Empty);
+			now = now.Replace("\"", String.Empty);
+
+			return now;
+		}
+
 		private bool IsJamOn(string jam)
 		{
-			//Console.WriteLine(jam);
 			string test = jam.Remove(0, 16);
-
 			if (test == "")
 			{
 				//Console.WriteLine("No current jam");
@@ -316,66 +327,66 @@ namespace Discord_Bot
 
 		}
 
-		private string GetTime(string time, bool jamOn)
+		private string GetTime(string timeDiff, bool jamOn)
 		{
-			int i = Int32.Parse(time);
+			int i = Int32.Parse(timeDiff);
 			string response = "";
 			
 
 			if (jamOn == false)
 			{
-				
+
 				i = Math.Abs(i);
 
 				if (i / 60 < 1) // SEC
-					response = i.ToString() + " second" + theSthing(i);
+					response = i.ToString() + " second" + Plurality(i);
 
 				if (i / 60 >= 1) // MIN
 				{
-					response = (i / 60).ToString() + " minute" + theSthing(i / 60);
-					int sec = (i % 60);					
-					response += " " + sec + " second" + theSthing(sec);
+					response = (i / 60).ToString() + " minute" + Plurality(i / 60);
+					int sec = (i % 60);
+					response += " " + sec + " second" + Plurality(sec);
 				}
-					
+
 				if (i / 3600 >= 1) // HOUR
 				{
-					response= (i / 3600).ToString() + " hour" + theSthing(i / 3600);
+					response = (i / 3600).ToString() + " hour" + Plurality(i / 3600);
 					int min = (i % 3600) / 60;
-					response += " " + min + " minute" + theSthing(min);
+					response += " " + min + " minute" + Plurality(min);
 				}
 
 				if (i / 86400 >= 1) // DAY
 				{
-					response = (i / 86400).ToString() + " day" + theSthing(i / 86400);
+					response = (i / 86400).ToString() + " day" + Plurality(i / 86400);
 
 					int hour = (i % 86400) / 3600;
-					response += " " + hour + " hour" + theSthing(hour);
+					response += " " + hour + " hour" + Plurality(hour);
 
 					int min = ((i % 86400) % 3600) / 60;
-					response += " " + min + " minute" + theSthing(min);
+					response += " " + min + " minute" + Plurality(min);
 				}
+
 
 			}
 			else
 			{
 
 				if (i / 60 < 1) // SEC
-					response = i.ToString() + " second" + theSthing(i);
+					response = i.ToString() + " second" + Plurality(i);
 
 				if ((3600 + i) / 60 >= 1) // MIN
 				{
-					response = ((3600 + i) / 60).ToString() + " minute" + theSthing((3600 + i) / 60);
+					response = ((3600 + i) / 60).ToString() + " minute" + Plurality((3600 + i) / 60);
 
 					int sec = ((3600 + i) % 60);
-					response += " " + sec + " second" + theSthing(sec);
+					response += " " + sec + " second" + Plurality(sec);
 				}
 			}
 
 			return response;
 		}
 
-
-		private string theSthing(int i)
+		private string Plurality(int i)
 		{
 			string response = "";
 			if (i == 1)
@@ -389,5 +400,11 @@ namespace Discord_Bot
 
 			return response;
 		}
+
+		#endregion
+
 	}
 }
+
+
+
