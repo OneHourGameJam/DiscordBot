@@ -48,6 +48,8 @@ namespace Discord_Bot
 			OHGJ_CreateTimeCommand("time");
 			OHGJ_CreateThemeCommand("theme");
 
+			CreateTextCommand("vote", "Vote on the next theme here: http://onehourgamejam.com/?page=themes");
+
 
 
 			#endregion
@@ -329,7 +331,7 @@ namespace Discord_Bot
 
 		private string GetTime(string timeDiff, bool jamOn)
 		{
-			int i = Int32.Parse(timeDiff);
+			int i = Int32.Parse(timeDiff) + 7200;
 			string response = "";
 			
 
