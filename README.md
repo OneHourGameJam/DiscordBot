@@ -5,3 +5,4 @@ Commands:
 - !time
 - !theme
 - !vote
+- !submit- !login

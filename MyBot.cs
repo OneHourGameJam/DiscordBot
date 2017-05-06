@@ -50,6 +50,10 @@ namespace Discord_Bot
 
 			CreateTextCommand("vote", "Vote on the next theme here: http://onehourgamejam.com/?page=themes");
 
+			CreateTextCommand("submit", "Submit your game here: http://onehourgamejam.com/?page=submit, **if you don't have an account yet type __!login__**");
+
+			CreateTextCommand("login", "If you don't have an account yet or if you aren't logged in go here: http://onehourgamejam.com/?page=login");
+
 
 
 			#endregion
