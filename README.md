@@ -4,3 +4,4 @@ Commands:
 
 - !time
 - !theme
+- !vote
