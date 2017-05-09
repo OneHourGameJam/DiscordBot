@@ -61,7 +61,7 @@ namespace _1HGJ_Discord_Bot
 
 			#region More Importand Stuff
 			discord.ExecuteAndWait(async () => {
-				await discord.Connect("MzA3NTkwMDI4MTUzMDYxMzc2.C-aXOw.pHmyG5FpvTZMV7H7HH8xv7DZETw", TokenType.Bot); //Insert token here
+				await discord.Connect("", TokenType.Bot); //Insert token here
 			});
 			#endregion
 
