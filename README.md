@@ -1,10 +1,19 @@
 # The Game Yam Bot
 
-If VS doesn't detect the Discord library:
+After downloading please make sure you have the following packages installed:
 
-- Go to Tools/NuGet..../Manage NuGet......
-- Under Browse search Discord.NET and uninstall both Discord.NET & Discord.NET.Commands
-- And than install both again
+- Discord.NET
+- Discord.NET.Commands
+- Microsoft.Bcl
+- Microsoft.Bcl.Async
+- Microsoft.Bcl.Build
+- Newtonsoft.Json
+- Nito.AsyncEx
+- RestSharp
+- WebSocket4Net
+
+If not, please install them using NuGet. 
+
 
 Commands:
 
