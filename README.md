@@ -1,24 +1,12 @@
-# The Game Yam Bot
+# Discord_Bot-Python
 
-After downloading please make sure you have the following packages installed:
+Modules used (Download modules.zip):
 
-- Discord.NET
-- Discord.NET.Commands
-- Microsoft.Bcl
-- Microsoft.Bcl.Async
-- Microsoft.Bcl.Build
-- Newtonsoft.Json
-- Nito.AsyncEx
-- RestSharp
-- WebSocket4Net
-
-If not, please install them using NuGet. 
-
-
-Commands:
-
-- !time
-- !theme
-- !vote
-- !submit
-- !login
+- discord.py
+- aiohttp
+- websockets
+- multidict
+- yarl
+- async_timeout
+- chardet
+- requests
