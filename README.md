@@ -1,12 +1,5 @@
-# Discord_Bot-Python
+# The 1HGJ Dicsord Bot
 
-Modules used (Download modules.zip):
+The discord bot used in the 1hgj discord server.
 
-- discord.py
-- aiohttp
-- websockets
-- multidict
-- yarl
-- async_timeout
-- chardet
-- requests
+Just install all of the modules, configure some variables and run main.py

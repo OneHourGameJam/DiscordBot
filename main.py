@@ -138,5 +138,5 @@ async def about():
     await bot.say(response)
 
 
-bot.run("TOKEN")
+bot.run("")
 
