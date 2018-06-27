@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from datetime import datetime
+import random
 
 import functions
 import logging
@@ -37,30 +38,24 @@ async def theme():
 async def randomTheme():
     await bot.say("Your random theme is: " + server.getRandomTheme())
 
-@bot.command()
-async def lime():
-    await bot.say("What is life? <:lime:322433693111287838>")
 
 @bot.command()
-async def limes():
-    await bot.say("What's a limes? :confused:")
+async def hype():
+    links = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays", "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif"]
+    link = random.choice(links)
+    await bot.say(link)
 
-@bot.command(pass_context=True)
-async def hype(ctx, member: discord.Member = None):
-    if member is None:
-        member = ctx.message.author
+@bot.command()
+async def lastTheme():
+    await bot.say("The previous jam's theme was: " + functions.getJamInfo(2))
 
-    channel = ctx.message.channel
-
-    #await bot.send_file(channel, "images/hypeTrain.png")
-    await bot.send_message(channel, "https://goo.gl/5TKpck")
 
 @bot.command(pass_context=True)
 async def tweetReminder(ctx, member: discord.Member = None):
     if member is None:
         member = ctx.message.author
 
-    channel = ctx.message.channel
+    #channel = ctx.message.channel
 
     if "moderator" in [y.name.lower() for y in member.roles]:
         offset =  datetime.utcnow() - server.getLastTweet()
@@ -71,7 +66,14 @@ async def tweetReminder(ctx, member: discord.Member = None):
 
             server.changeLastTweet()
 
-            await bot.say(tweetBot.tweet("The #gamejam starts in " + timeleft + " (Sat " + day + " UTC)! More info at onehourgamejam.com #gamedev #indiedev #1hgj"))
+            value = str.format("The #1hgj starts in {0} (Sat {1} UTC)! More info at onehourgamejam.com #gamedev #indiedev #gamejam", timeleft, day)
+            valueLen = value.count("")
+            #print(valueLen)
+
+            if valueLen <= 140:
+                await bot.say(tweetBot.tweet(value))
+            else:
+                await bot.say("Tweet error: Too many characters to tweet")
 
         else:
             await bot.say("Not enough time has passed since last tweet (" + str(round((28800 - offset.total_seconds()) / 3600, 3)) + "h left)")
@@ -79,19 +81,8 @@ async def tweetReminder(ctx, member: discord.Member = None):
         print("Wrong role")
 
 
-@bot.command()
-async def hypetrain():
-    await bot.say("https://youtu.be/gMkrvTraVZ0")
-	
-@bot.command()
-async def weirdhypetrain():
-    await bot.say("https://www.youtube.com/watch?v=XpbTI4zN1FY")
 
 
-
-#@bot.command()
-#async def help():
-#    await bot.say("You have found me!")
 
 @bot.command()
 async def addRandomTheme(name : str):
@@ -113,6 +104,53 @@ async def addRandomTheme(name : str):
 # --------------Static Text Commands------------
 
 @bot.command()
+async def randomThemeVoting():
+    await bot.say("Please vote on the **random** themes that should be deleted here: https://goo.gl/forms/8hyxIwR62VU8ocuG3")
+
+@bot.command()
+async def conquerWorld():
+    await bot.say("https://www.youtube.com/watch?v=XJYmyYzuTa8")
+
+@bot.command()
+async def hottestManAlive():
+    await bot.say("http://devillime.com/uploads/image/Gilmour.jpg")
+	
+@bot.command()
+async def lime():
+    await bot.say("What is life? <:lime:322433693111287838>")
+
+@bot.command()
+async def limes():
+    await bot.say("What's a limes? :confused:")
+
+@bot.command()
+async def hypetrain():
+    await bot.say("https://youtu.be/gMkrvTraVZ0")
+	
+@bot.command()
+async def weirdhypetrain():
+    await bot.say("http://youtu.be/lSxh-UK7Ays")
+
+@bot.command()
+async def panic():
+    await bot.say("https://cdn.discordapp.com/attachments/307910914588540929/401832495307292682/6112012013224turningoffyourcellphonewhenitgoesoffinclass.gif")
+
+@bot.command()
+async def hypeSquad():
+    response = "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif"
+    await bot.say(response)
+
+@bot.command()
+async def rules():
+    response = "This jam has no rules. This Yam Bot is a free bot."
+    await bot.say(response)
+
+@bot.command()
+async def faq():
+    response = "FAQ: http://onehourgamejam.com/?page=rules"
+    await bot.say(response)
+
+@bot.command()
 async def vote():
     response = "Vote on the next theme here: http://onehourgamejam.com/?page=themes, **if you don't have an account yet, type __!login__**"
     await bot.say(response)
@@ -129,7 +167,7 @@ async def login():
 
 @bot.command()
 async def commands():
-    response = "```Commands:\n\n!about\n!commands\n\n!time\n!theme\n\n!randomTheme\n!addRandomTheme THEME\n\n!submit\n!vote\n!login\n\n!tweetReminder (Mod only)```"#\n\n\nWrite '!help COMMAND' for more info.```"
+    response = "```Commands:\n\n!about\n!faq\n!rules\n!commands\n\n!time\n!theme\n!lastTheme\n\n!randomTheme\n!addRandomTheme THEME\n!randomThemeVoting\n\n!submit\n!vote\n!login\n\n!tweetReminder (Mod only)```"#\n\n\nWrite '!help COMMAND' for more info.```"
     await bot.say(response)
 
 @bot.command()
@@ -138,5 +176,5 @@ async def about():
     await bot.say(response)
 
 
-bot.run("")
+bot.run(INSERT KEY)
 

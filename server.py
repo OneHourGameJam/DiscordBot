@@ -2,9 +2,9 @@ import _md5
 import requests
 from datetime import datetime
 
-changeLastTweetURL = "http://devillime.com/ohgj/bot/changelasttweet.php?"
-randomThemeURL = "http://devillime.com/ohgj/bot/addtheme.php?"
-secretKey = "INSERT SECRET KEY"
+changeLastTweetURL = URL
+randomThemeURL = URL
+secretKey = PASSWORD
 
 
 
@@ -34,14 +34,14 @@ def checkBlacklist(string : str):
     return False
 
 def getRandomTheme():
-    URL = "http://devillime.com/ohgj/bot/displaytheme.php"
+    URL = URL
     page = requests.get(URL)
     content = page.content.decode('UTF-8')
 
     return content
 
 def getLastTweet():
-    URL = "http://devillime.com/ohgj/bot/displaylasttweet.php"
+    URL = URL
     page = requests.get(URL)
     content = page.content.decode('UTF-8')
 
@@ -52,6 +52,5 @@ def changeLastTweet():
     previous = getLastTweet().strftime("%Y-%m-%d %H:%M:%S").replace(" ", "_")
 
     url = changeLastTweetURL + "timestamp=" + now + "&hash=" + generateHash(now) + "&lasttimestamp=" + previous
-    #print(url)
 
     requests.get(url)

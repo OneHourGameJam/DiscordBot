@@ -8,10 +8,10 @@ def get_api(cfg):
 
 def tweet(contents : str):
   cfg = {
-    "consumer_key"        : "",
-    "consumer_secret"     : "",
-    "access_token"        : "",
-    "access_token_secret" : ""
+    "consumer_key"        : KEY,
+    "consumer_secret"     : SECRET,
+    "access_token"        : TOKEN,
+    "access_token_secret" : TOKEN SERCET
     }
 
   api = get_api(cfg)
@@ -19,7 +19,7 @@ def tweet(contents : str):
     status = api.update_status(status=contents)
     return "Tweet sent"
   else:
-      print("Too many characters to tweet!")
+      print("Too many characters to tweet!!")
       return "Tweet error: Too many characters to tweet"
 
 

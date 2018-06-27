@@ -34,6 +34,8 @@ def getJamInfo(index : int):
         else:
             response = getTime(getUpcomingJam(Info[0], 3), False) + " left until the next jam."
 
+    elif(index == 2):
+        response = getLastJamTheme(Info[2])
 
 
     return response
@@ -73,7 +75,6 @@ def getUpcomingJamLong(index : int):
         Info[i] = S
         i += 1
 
-    print()
 
     # 0 - - Jam number
     # 1 - - Theme
@@ -81,6 +82,28 @@ def getUpcomingJamLong(index : int):
     # 3 - - Time difference
 
     return Info[index]
+
+
+def getLastJamTheme(info : str):
+    response = "getLastJamTheme"
+
+    info = info.replace("\"previous_jams\":[{", "")
+    info = info.replace("]}", "")
+
+    infoSplit = info.split("},{")
+    lastJam = infoSplit[infoSplit.__len__() - 1]
+
+    lastJam = lastJam.replace("}", "")
+
+    lastJamSplit = lastJam.split(",")
+
+    theme = lastJamSplit[1]
+    theme = theme.replace("\"theme\":\"", "")
+    theme = theme.replace("\"", "")
+
+    response = theme
+
+    return response
 
 def getUpcomingJam(string : str, index : int):
     string = string[19:]
