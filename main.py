@@ -1,180 +1,265 @@
+'''
+ABOUT:
+The main file for the One Hour Game Jam Discord bot.
+This file contains every command the bot uses.
+'''
 import discord
 from discord.ext import commands
-from datetime import datetime
 import random
+import datetime
+import asyncio
 
-import functions
-import logging
-import server
+import Config
+import JamInfo
 import tweetBot
-
-
-
-logger = logging.getLogger('discord')
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
+import server
 
 bot = commands.Bot(command_prefix="!")
 
+#region Jam Reminder
+# function for the bot that will be called every 60 minutes.
+@asyncio.coroutine
+def jamReminderTask():
+    yield from bot.wait_until_ready()
 
-client = discord.Client()
+    while not bot.is_closed:
+        # get the current datetime
+        now = datetime.datetime.utcnow()
+        dtprint=now.strftime("%A %H:%M") ## datetime for printing
+        dtcheck=now.strftime("%a %H") ## dateime object for checking
+        # check if the time is right
+        if dtcheck== "Sat 20":
+            channel = discord.Object(id='307620502158049281')   ## this is the 1hgj discord announcement channel
 
-bot.remove_command("help")
+            timeDiff = JamInfo.getTimeDiff()  # Get the time remaining
+            formattedDiff = JamInfo.formatTime(timeDiff)  # Get the formatted array
 
+            yield from bot.send_message(channel, "@everyone It is " + str(dtprint) + ". The One Hour Game Jam start in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
+        yield from asyncio.sleep(Config.jamReminder_check) # Run task every **jamReminder_check** seconds
+#endregion
 
-@bot.command()
-async def time():
-    response = functions.getJamInfo(1)
-    await bot.say(response)
+#region Dynamic Commands
 
-@bot.command()
+#region Next Jam API
+'''
+ABOUT:
+Contains all of the commands using the One Hour Game Jam API (code in JamInfo.py)
+'''
+
+@bot.command(aliases=["Theme", "THEME"])
 async def theme():
-    response = "The theme " + functions.getJamInfo(0)
+    response = JamInfo.getCurrentTheme() # Get the theme of the ongoing jam
+
+    if(response == ""):
+        response = Config.commands_themeNotAnnounced # If the ongoing jam JSON string is empty there isn't an ongoing jam ergo the theme hasn't been announced yet
+
     await bot.say(response)
 
-@bot.command()
+@bot.command(aliases=["lasttheme", "LastTheme"])
+async def lastTheme():
+    if(Config.usingLastTheme):
+        await bot.say(Config.commands_getLastTheme.format(JamInfo.getLastTheme()))
+
+@bot.command(aliases=['Time', "TIME"])
+async def time():
+    timeDiff = JamInfo.getTimeDiff() # Get the time remaining
+    response = Config.commands_getTime_Upcoming
+
+    if(timeDiff < 0): # If timeDiff is negative the jam has already started
+        timeDiff = 3600 - timeDiff # Calculate the time until the jam ends
+        response = Config.commands_getTime_Ongoing
+
+    formattedDiff = JamInfo.formatTime(timeDiff) # Get the formatted array
+
+    if(formattedDiff[0] != ""): response =  response.format(formattedDiff[0] + " " + formattedDiff[1] + " " + formattedDiff[2]) # Day + Hour + Min
+    elif(formattedDiff[1] != ""): response =  response.format(formattedDiff[1] + " " + formattedDiff[2]) # Hour + Min
+    elif(formattedDiff[2] != ""): response =  response.format(formattedDiff[2] + " " + formattedDiff[3]) # Min + Sec
+    else: response = response.format(formattedDiff[3]) # Sec
+
+    await bot.say(response)
+#endregion
+
+#region Random Theme
+
+@bot.command(aliases=["randomtheme", "RandomTheme", "Randomtheme"])
 async def randomTheme():
     await bot.say("Your random theme is: " + server.getRandomTheme())
 
-
-@bot.command()
-async def hype():
-    links = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays", "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif"]
-    link = random.choice(links)
-    await bot.say(link)
-
-@bot.command()
-async def lastTheme():
-    await bot.say("The previous jam's theme was: " + functions.getJamInfo(2))
-
-
-@bot.command(pass_context=True)
-async def tweetReminder(ctx, member: discord.Member = None):
-    if member is None:
-        member = ctx.message.author
-
-    #channel = ctx.message.channel
-
-    if "moderator" in [y.name.lower() for y in member.roles]:
-        offset =  datetime.utcnow() - server.getLastTweet()
-
-        if(offset.total_seconds() >= 28800): # 8 hours
-            timeleft = functions.getJamInfo(1).replace(" left until the next jam.", "")
-            day = functions.getUpcomingJamLong(2).replace("\"", "")
-
-            server.changeLastTweet()
-
-            value = str.format("The #1hgj starts in {0} (Sat {1} UTC)! More info at onehourgamejam.com #gamedev #indiedev #gamejam", timeleft, day)
-            valueLen = value.count("")
-            #print(valueLen)
-
-            if valueLen <= 140:
-                await bot.say(tweetBot.tweet(value))
-            else:
-                await bot.say("Tweet error: Too many characters to tweet")
-
-        else:
-            await bot.say("Not enough time has passed since last tweet (" + str(round((28800 - offset.total_seconds()) / 3600, 3)) + "h left)")
-    else:
-        print("Wrong role")
-
-
-
-
-
-@bot.command()
+@bot.command(aliases=["addrandomtheme", "AddRandomTheme", "Addrandomtheme"])
 async def addRandomTheme(name : str):
-    response = "If you see me, something went wrong"
-
     name = name.lower()
     hash = server.generateHash(name)
 
-    if (False == True):
-    #if(server.checkBlacklist(name) == True):
-            response = "Blacklisted word found in theme."
-    else:
-        server.addRandomTheme(name, hash)
-        response = "Added '" + name + "' to random themes."
+    server.addRandomTheme(name, hash)
 
-    await bot.say(response)
+    await bot.say("Added '" + name + "' to random themes.")
 
+#endregion
 
-# --------------Static Text Commands------------
+#region Twitter
+'''
+ABOUT:
+Commands using the Twitter API (code in tweetBot.py)
+'''
+@bot.command(pass_context=True)
+async def tweetReminder(ctx, member : discord.Member = None):
+    if(Config.usingTwitterBot):
+        if member is None:
+            member = ctx.message.author
 
-@bot.command()
-async def randomThemeVoting():
-    await bot.say("Please vote on the **random** themes that should be deleted here: https://goo.gl/forms/8hyxIwR62VU8ocuG3")
+        if "moderator" in [y.name.lower() for y in member.roles]: # Check if the user is a moderator
+            offset = datetime.datetime.utcnow() - server.getLastTweet() # Get the time since last tweet
 
-@bot.command()
-async def conquerWorld():
-    await bot.say("https://www.youtube.com/watch?v=XJYmyYzuTa8")
+            if(offset.total_seconds() >= Config.twitter_timeSinceTweet): # Has **Config.twitter_timeSinceTweet** passed since the last tweet?
+                timeDiff = JamInfo.getTimeDiff()  # Get the time remaining
+                timeLeft = ""
 
-@bot.command()
-async def hottestManAlive():
-    await bot.say("http://devillime.com/uploads/image/Gilmour.jpg")
-	
-@bot.command()
-async def lime():
-    await bot.say("What is life? <:lime:322433693111287838>")
+                if (timeDiff < 0):  # If timeDiff is negative the jam has already started -- Too late to tweet
+                    await bot.say("The jam has already started -- NOT TWEETING")
 
-@bot.command()
-async def limes():
-    await bot.say("What's a limes? :confused:")
+                formattedDiff = JamInfo.formatTime(timeDiff)  # Get the formatted array
 
-@bot.command()
-async def hypetrain():
-    await bot.say("https://youtu.be/gMkrvTraVZ0")
-	
-@bot.command()
-async def weirdhypetrain():
-    await bot.say("http://youtu.be/lSxh-UK7Ays")
+                if (formattedDiff[0] != ""):timeLeft = formattedDiff[0] + " " + formattedDiff[1] + " " + formattedDiff[2]  # Day + Hour + Min
+                elif (formattedDiff[1] != ""): timeLeft = formattedDiff[1] + " " + formattedDiff[2] # Hour + Min
+                elif (formattedDiff[2] != ""): timeLeft = formattedDiff[2] + " " + formattedDiff[3]  # Min + Sec
+                else: timeLeft = formattedDiff[3]  # Sec
 
-@bot.command()
-async def panic():
-    await bot.say("https://cdn.discordapp.com/attachments/307910914588540929/401832495307292682/6112012013224turningoffyourcellphonewhenitgoesoffinclass.gif")
+                date = JamInfo.getUpcomingJamDate()
 
-@bot.command()
-async def hypeSquad():
-    response = "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif"
-    await bot.say(response)
+                value = str.format("The #1hgj starts in {0} (Sat {1} UTC)! More info at onehourgamejam.com #gamedev #indiedev #gamejam", timeLeft, date)
+                valueLen = value.count("")
 
-@bot.command()
-async def rules():
-    response = "This jam has no rules. This Yam Bot is a free bot."
-    await bot.say(response)
+                if valueLen <= 280:
+                    await bot.say(tweetBot.tweet(value))
+                else:
+                    await bot.say("Tweet error: Too many characters to tweet")
 
-@bot.command()
-async def faq():
-    response = "FAQ: http://onehourgamejam.com/?page=rules"
-    await bot.say(response)
+            else:
+                await bot.say("Not enough time has passed since last tweet (" + str(round((28800 - offset.total_seconds()) / 3600, 3)) + "h left)")
+        else:
+            print("Wrong role")
 
-@bot.command()
-async def vote():
-    response = "Vote on the next theme here: http://onehourgamejam.com/?page=themes, **if you don't have an account yet, type __!login__**"
-    await bot.say(response)
+#endregion
 
-@bot.command()
-async def submit():
-    response = "Submit your game here: http://onehourgamejam.com/?page=submit, **if you don't have an account yet, type __!login__**"
-    await bot.say(response)
+#endregion
 
-@bot.command()
-async def login():
-    response = "If you don't have an account yet or if you aren't logged in go here: http://onehourgamejam.com/?page=login"
-    await bot.say(response)
+#region Static Commands
 
-@bot.command()
+'''
+ABOUT:
+Commands that only do one thing: Print a static string
+in the chat every time they're called. These wont be documented
+because their functions are pretty explicit.
+'''
+
+#region One Hour Game Jam Commands
+
+'''
+ABOUT:
+Static commands meant to to aid newcomers
+with links to the One Hour Game Jam website.
+
+You can edit the content of these commands in Config.py
+'''
+
+bot.remove_command("help")  #The discord.py library comes with a default definition of the 'help' command so we remove the pre-defined one before we can define a new one in the next line
+@bot.command(aliases=["help", "Help"])
 async def commands():
-    response = "```Commands:\n\n!about\n!faq\n!rules\n!commands\n\n!time\n!theme\n!lastTheme\n\n!randomTheme\n!addRandomTheme THEME\n!randomThemeVoting\n\n!submit\n!vote\n!login\n\n!tweetReminder (Mod only)```"#\n\n\nWrite '!help COMMAND' for more info.```"
-    await bot.say(response)
+    await bot.say(Config.commands_botCommands)
 
 @bot.command()
 async def about():
-    response = "The One Hour Game Jam happens every Saturday at 20:00 UTC and ends at 21:00 UTC. You have until the next jam to submit your game.\nJoin us, learn and just have fun!"
-    await bot.say(response)
+    await bot.say(Config.commands_aboutOHGJ)
 
+@bot.command(aliases=["faq", "FAQ"])
+async def rules():
+    await bot.say(Config.commands_rules)
 
-bot.run(INSERT KEY)
+@bot.command()
+async def vote():
+    await bot.say(Config.commands_vote)
 
+@bot.command()
+async def submit():
+    await bot.say(Config.commands_submit)
+
+@bot.command()
+async def login():
+    await bot.say(Config.commands_login)
+
+#endregion
+
+#region Easter Egg Commands
+
+'''
+ABOUT:
+Static commands that are in here just
+for fun and have no explicit function.
+'''
+
+@bot.command(aliases=["Hype"])
+async def hype():
+    if(Config.usingEasterEggs):
+        link = random.choice(Config.easterEggs_hypeLinks)
+        await bot.say(link)
+
+@bot.command()
+async def hypeAll():
+    if (Config.usingEasterEggs):
+        await bot.say(', '.join(Config.easterEggs_hypeLinks))
+
+@bot.command()
+async def conquerWorld():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_conquerWorld)
+
+@bot.command()
+async def hottestManAlive():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_hottestManAlive)
+
+@bot.command()
+async def eminem():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_eminem)
+
+@bot.command()
+async def lime():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_lime)
+
+@bot.command()
+async def limes():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_limes)
+
+@bot.command(aliases=["hypeTrain", "HypeTrain"])
+async def hypetrain():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_hypeTrain)
+
+@bot.command(aliases=["weirdHypeTrain", "WeirdHypeTrain"])
+async def weirdhypetrain():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_weirdHypeTrain)
+
+@bot.command(aliases=["slovakhypetrain", "SlovakHypeTrain"])
+async def slovakHypeTrain():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_slovakHypeTrain)
+
+@bot.command()
+async def panic():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_panic)
+
+@bot.command()
+async def hypeSquad():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_hypeSquad)
+#endregion
+
+#endregion
+
+bot.loop.create_task(jamReminderTask())
+bot.run(Config.bot_key)
