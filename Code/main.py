@@ -102,7 +102,7 @@ async def time():
 @bot.command(aliases=["randomtheme", "RandomTheme", "Randomtheme"])
 async def randomTheme():
     if(Config.usingRandomTheme):
-        await bot.say("Your random thmee is: " + server.getRandomTheme())
+        await bot.say("Your random theme is: " + server.getRandomTheme())
 
 @bot.command(aliases=["addrandomtheme", "AddRandomTheme", "Addrandomtheme"])
 async def addRandomTheme(name : str):
