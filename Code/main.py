@@ -46,14 +46,14 @@ def jamReminderTask():
         dtprint=now.strftime("%A %H:%M") ## datetime for printing
         dtcheck=now.strftime("%a %H") ## dateime object for checking
         # check if the time is right
-        if dtcheck== "Sat 20":
+        if dtcheck== "Sat 19":
             channel = discord.Object(id='307620502158049281')   ## this is the 1hgj discord announcement channel
 
             timeDiff = JamInfo.getTimeDiff()  # Get the time remaining
             formattedDiff = JamInfo.formatTime(timeDiff)  # Get the formatted array
 
-            yield from bot.send_message(channel, "@everyone It is " + str(dtprint) + ". The One Hour Game Jam start in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
-        yield from asyncio.sleep(Config.jamReminder_check) # Run task every **jamReminder_check** seconds
+            yield from bot.send_message(channel, "It is " + str(dtprint) + ". The One Hour Game Jam start in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
+        yield from asyncio.sleep(3600) # Run task every 3600 seconds (1 hour)
 #endregion
 
 #region Dynamic Commands
@@ -66,10 +66,13 @@ Contains all of the commands using the One Hour Game Jam API (code in JamInfo.py
 
 @bot.command(aliases=["Theme", "THEME"])
 async def theme():
-    response = JamInfo.getCurrentTheme() # Get the theme of the ongoing jam
+    response = ""
+    theme = JamInfo.getCurrentTheme() # Get the theme of the ongoing jam
 
-    if(response == ""):
+    if(theme == ""):
         response = Config.commands_themeNotAnnounced # If the ongoing jam JSON string is empty there isn't an ongoing jam ergo the theme hasn't been announced yet
+    else:
+        response = Config.commands_theme.format(theme)
 
     await bot.say(response)
 
@@ -84,7 +87,7 @@ async def time():
     response = Config.commands_getTime_Upcoming
 
     if(timeDiff < 0): # If timeDiff is negative the jam has already started
-        timeDiff = 3600 - timeDiff # Calculate the time until the jam ends
+        timeDiff = 3600 + timeDiff # Calculate the time until the jam ends
         response = Config.commands_getTime_Ongoing
 
     formattedDiff = JamInfo.formatTime(timeDiff) # Get the formatted array

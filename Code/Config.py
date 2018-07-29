@@ -5,7 +5,7 @@ Stores custom variables the bot uses
 
 #region DEBUG
 DEBUG = False
-DEBUG_channel =
+DEBUG_channel = 
 #endregion
 
 #region Enabling Features
@@ -13,10 +13,6 @@ usingLastTheme = True
 usingRandomTheme = True
 usingEasterEggs = True
 usingTwitterBot = True
-#endregion
-
-#region Jam Reminder
-jamReminder_check = 3600
 #endregion
 
 #region Discord API keys
@@ -32,21 +28,22 @@ twitter_timeSinceTweet = 28800 # Default: 28800 sec => 8 hours
 twitter_consumerKey = 
 twitter_consumerSecret = 
 twitter_accessToken = 
-twitter_tokenSecret =
+twitter_tokenSecret = 
 #endregion
 
 #region Server config
 server_secretKey = 
 
 server_changeLastTweetURL = 
-server_displayLastTweetURL =
+server_displayLastTweetURL = 
 
-server_randomThemeURL =
-server_displayThemeURL =
+server_randomThemeURL = 
+server_displayThemeURL = 
 #endregion
 
 #region Dynamic Command Responses
 commands_themeNotAnnounced = "The theme hasn't been announced yet."
+commands_theme = "The theme is: \"{}\""
 commands_getLastTheme = "The previous jam's theme was: '{}'"
 commands_getTime_Upcoming = "{} left until the next jam."
 commands_getTime_Ongoing = "{} left."
@@ -96,7 +93,7 @@ commands_login = "If you don't have an account yet or if you aren't logged in go
 
 #The different links the !hype command prints
 easterEggs_hypeLinks = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays",
-"https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif", "https://www.youtube.com/watch?v=zpGU355C0ak"]
+"https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif", "https://www.youtube.com/watch?v=zpGU355C0ak", "https://www.youtube.com/watch?v=s6E3xVz01bw"]
 easterEggs_conquerWorld = "https://www.youtube.com/watch?v=XJYmyYzuTa8"
 easterEggs_hottestManAlive = "http://devillime.com/uploads/image/Gilmour.jpg"
 easterEggs_eminem = "Chicka, chicka, chicka, Slim Shady\nhttps://www.youtube.com/watch?v=IdS3WVYr834"
