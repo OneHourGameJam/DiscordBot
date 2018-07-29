@@ -2,10 +2,13 @@
 ABOUT:
 Stores custom variables the bot uses
 """
+import os
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 #region DEBUG
 DEBUG = False
 DEBUG_channel = 
+DEBUG_reminder_lastReminderFile = dir_path + "/DEBUG/JamReminder.txt"
 #endregion
 
 #region Enabling Features
@@ -13,10 +16,17 @@ usingLastTheme = True
 usingRandomTheme = True
 usingEasterEggs = True
 usingTwitterBot = True
+usingJamReminder = True
+#endregion
+
+#region Jam Reminder
+reminder_channel = 
+reminder_lastReminderFile = dir_path + "/BotFiles/JamReminder.txt"
+reminder_time = "Sat 19"
 #endregion
 
 #region Discord API keys
-bot_key =  # The Discord bot key used in bot.run
+bot_key = # The Discord bot key used in bot.run
 #endregion
 
 #region Twitter API keys
@@ -26,7 +36,7 @@ twitter_timeSinceTweet = 28800 # Default: 28800 sec => 8 hours
 
 # Keys used in tweetbot.py
 twitter_consumerKey = 
-twitter_consumerSecret = 
+twitter_consumerSecret =
 twitter_accessToken = 
 twitter_tokenSecret = 
 #endregion
@@ -36,7 +46,6 @@ server_secretKey =
 
 server_changeLastTweetURL = 
 server_displayLastTweetURL = 
-
 server_randomThemeURL = 
 server_displayThemeURL = 
 #endregion

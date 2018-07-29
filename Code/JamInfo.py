@@ -155,7 +155,8 @@ def formatTime(timeDiff : int):
     if (m == 1): response[2] = "1 minute"
     elif (m > 1): response[2] = "{} minutes".format(m)
 
-    if (s == 1): response[3] = "1 second"
+    if (s == 0): response[3] = "0 seconds"
+    elif (s == 1): response[3] = "1 second"
     elif (s > 1): response[3] = "{} seconds".format(s)
 
     return response

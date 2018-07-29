@@ -8,6 +8,7 @@ from discord.ext import commands
 import random
 import datetime
 import asyncio
+import io
 
 import Config
 import JamInfo
@@ -29,8 +30,11 @@ async def now():
 def on_ready():
     #Prints a message into a custom channel when it goes online
     if(Config.DEBUG):
+        enabledFeatures = "\n\nDebug Enabled: {}\nDirectory: {}\nLastTheme Enabled: {}\nRandomTheme Enabled:{}\nEasterEggs Enabled: {}\nTwitterBot Enabled: {}\nJamReminder Enabled: {}".format(
+        Config.DEBUG, Config.dir_path, Config.usingLastTheme, Config.usingRandomTheme, Config.usingEasterEggs, Config.usingTwitterBot, Config.usingJamReminder)
+
         channelID = discord.Object(id=Config.DEBUG_channel) # Get the channel ID of the debug channel
-        yield from bot.send_message(channelID, "I have come online. "  + JamInfo.getNow().__str__())
+        yield from bot.send_message(channelID, "***I have come online ("  + JamInfo.getNow().__str__() + ")***" + enabledFeatures)
 
 #endregion
 
@@ -41,19 +45,33 @@ def jamReminderTask():
     yield from bot.wait_until_ready()
 
     while not bot.is_closed:
-        # get the current datetime
-        now = datetime.datetime.utcnow()
-        dtprint=now.strftime("%A %H:%M") ## datetime for printing
-        dtcheck=now.strftime("%a %H") ## dateime object for checking
-        # check if the time is right
-        if dtcheck== "Sat 19":
-            channel = discord.Object(id='307620502158049281')   ## this is the 1hgj discord announcement channel
+        if Config.usingJamReminder:
+            # get the current datetime
+            now = datetime.datetime.utcnow()
+            dtprint=now.strftime("%A %H:%M") ## datetime for printing
+            dtcheck=now.strftime("%a %H") ## dateime object for checking
 
-            timeDiff = JamInfo.getTimeDiff()  # Get the time remaining
-            formattedDiff = JamInfo.formatTime(timeDiff)  # Get the formatted array
+            jamReminderFile = io.open(Config.reminder_lastReminderFile, 'r')  # Open the JamReminder file where the last reminder info is stored
+            fileContents = jamReminderFile.read() # Read the contents of the file
 
-            yield from bot.send_message(channel, "It is " + str(dtprint) + ". The One Hour Game Jam start in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
-        yield from asyncio.sleep(3600) # Run task every 3600 seconds (1 hour)
+            lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H").__str__() # Convert the JamReminder file into a datetime object
+            nowFormatted = now.strftime("%Y-%m-%d %H:00:00").__str__() # Format 'now' into the readable format
+
+            # check if the time is right AND if we already sent a message to the channel
+            if dtcheck == Config.reminder_time and lastReminder != nowFormatted:
+                channel = discord.Object(id=Config.reminder_channel)   ## this is the 1hgj discord announcement channel
+
+                timeDiff = JamInfo.getTimeDiff()  # Get the time remaining
+                formattedDiff = JamInfo.formatTime(timeDiff)  # Get the formatted array
+
+                jamReminderFile = io.open(Config.reminder_lastReminderFile, 'w') # Reopen the JamReminder file in the WRITE mode
+                jamReminderFile.write(nowFormatted) # Write the time we sent the reminder (aka now)
+
+                yield from bot.send_message(channel, "It is " + str(dtprint) + ". The One Hour Game Jam starts in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
+
+            jamReminderFile.close() # Make sure to close the file stream
+
+        yield from asyncio.sleep(60) # Run task every 60 seconds
 #endregion
 
 #region Dynamic Commands
