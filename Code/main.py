@@ -28,9 +28,10 @@ async def now():
 @bot.event
 @asyncio.coroutine
 def on_ready():
+
     #Prints a message into a custom channel when it goes online
     if(Config.DEBUG):
-        enabledFeatures = "\n\nDebug Enabled: {}\nDirectory: {}\nLastTheme Enabled: {}\nRandomTheme Enabled:{}\nEasterEggs Enabled: {}\nTwitterBot Enabled: {}\nJamReminder Enabled: {}".format(
+        enabledFeatures = "\nDebug Enabled: {}\nDirectory: {}\nLastTheme Enabled: {}\nRandomTheme Enabled:{}\nEasterEggs Enabled: {}\nTwitterBot Enabled: {}\nJamReminder Enabled: {}".format(
         Config.DEBUG, Config.dir_path, Config.usingLastTheme, Config.usingRandomTheme, Config.usingEasterEggs, Config.usingTwitterBot, Config.usingJamReminder)
 
         channelID = discord.Object(id=Config.DEBUG_channel) # Get the channel ID of the debug channel
@@ -54,7 +55,7 @@ def jamReminderTask():
             jamReminderFile = io.open(Config.reminder_lastReminderFile, 'r')  # Open the JamReminder file where the last reminder info is stored
             fileContents = jamReminderFile.read() # Read the contents of the file
 
-            lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H").__str__() # Convert the JamReminder file into a datetime object
+            lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H:00:00").__str__() # Convert the JamReminder file into a datetime object
             nowFormatted = now.strftime("%Y-%m-%d %H:00:00").__str__() # Format 'now' into the readable format
 
             # check if the time is right AND if we already sent a message to the channel
@@ -69,7 +70,7 @@ def jamReminderTask():
 
                 yield from bot.send_message(channel, "It is " + str(dtprint) + ". The One Hour Game Jam starts in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
 
-            jamReminderFile.close() # Make sure to close the file stream
+            jamReminderFile.close() # Make sure to close the file stream		
 
         yield from asyncio.sleep(60) # Run task every 60 seconds
 #endregion

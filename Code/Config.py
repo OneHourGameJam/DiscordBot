@@ -26,7 +26,7 @@ reminder_time = "Sat 19"
 #endregion
 
 #region Discord API keys
-bot_key = # The Discord bot key used in bot.run
+bot_key =  # The Discord bot key used in bot.run
 #endregion
 
 #region Twitter API keys
@@ -36,7 +36,7 @@ twitter_timeSinceTweet = 28800 # Default: 28800 sec => 8 hours
 
 # Keys used in tweetbot.py
 twitter_consumerKey = 
-twitter_consumerSecret =
+twitter_consumerSecret = 
 twitter_accessToken = 
 twitter_tokenSecret = 
 #endregion
@@ -46,6 +46,7 @@ server_secretKey =
 
 server_changeLastTweetURL = 
 server_displayLastTweetURL = 
+
 server_randomThemeURL = 
 server_displayThemeURL = 
 #endregion
