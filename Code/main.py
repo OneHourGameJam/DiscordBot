@@ -17,6 +17,13 @@ import server
 
 bot = commands.Bot(command_prefix="!")
 
+'''@bot.event
+@asyncio.coroutine
+def on_message(message):
+    if ('heck' in message.content.lower()) or ('frick' in message.content.lower()):
+        yield from bot.send_message(message.channel, Config.easterEggs_frickLink)
+    yield from bot.process_commands(message)'''
+
 #region Debug
 
 @bot.command()
@@ -31,7 +38,7 @@ def on_ready():
 
     #Prints a message into a custom channel when it goes online
     if(Config.DEBUG):
-        enabledFeatures = "\nDebug Enabled: {}\nDirectory: {}\nLastTheme Enabled: {}\nRandomTheme Enabled:{}\nEasterEggs Enabled: {}\nTwitterBot Enabled: {}\nJamReminder Enabled: {}".format(
+        enabledFeatures = "\nDebug Enabled: {}\nDirectory: {}\nLastTheme Enabled: {}\nRandomTheme Enabled: {}\nEasterEggs Enabled: {}\nTwitterBot Enabled: {}\nJamReminder Enabled: {}".format(
         Config.DEBUG, Config.dir_path, Config.usingLastTheme, Config.usingRandomTheme, Config.usingEasterEggs, Config.usingTwitterBot, Config.usingJamReminder)
 
         channelID = discord.Object(id=Config.DEBUG_channel) # Get the channel ID of the debug channel
@@ -40,39 +47,84 @@ def on_ready():
 #endregion
 
 #region Jam Reminder
-# function for the bot that will be called every 60 minutes.
+# function for the bot that will be called every 60 seconds.
 @asyncio.coroutine
 def jamReminderTask():
     yield from bot.wait_until_ready()
 
     while not bot.is_closed:
+
         if Config.usingJamReminder:
             # get the current datetime
             now = datetime.datetime.utcnow()
             dtprint=now.strftime("%A %H:%M") ## datetime for printing
             dtcheck=now.strftime("%a %H") ## dateime object for checking
 
-            jamReminderFile = io.open(Config.reminder_lastReminderFile, 'r')  # Open the JamReminder file where the last reminder info is stored
+            jamReminderFile = io.open(Config.reminder_lastJamReminderFile, 'r')  # Open the JamReminder file where the last reminder info is stored
             fileContents = jamReminderFile.read() # Read the contents of the file
 
             lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H:00:00").__str__() # Convert the JamReminder file into a datetime object
             nowFormatted = now.strftime("%Y-%m-%d %H:00:00").__str__() # Format 'now' into the readable format
 
             # check if the time is right AND if we already sent a message to the channel
-            if dtcheck == Config.reminder_time and lastReminder != nowFormatted:
-                channel = discord.Object(id=Config.reminder_channel)   ## this is the 1hgj discord announcement channel
+            if dtcheck == Config.reminder_JamTime and lastReminder != nowFormatted:
+                #region Jam Reminder
+                channel = discord.Object(id=Config.reminder_JamChannel)   ## this is the 1hgj discord announcement channel
 
-                timeDiff = JamInfo.getTimeDiff()  # Get the time remaining
-                formattedDiff = JamInfo.formatTime(timeDiff)  # Get the formatted array
-
-                jamReminderFile = io.open(Config.reminder_lastReminderFile, 'w') # Reopen the JamReminder file in the WRITE mode
+                jamReminderFile = io.open(Config.reminder_lastJamReminderFile, 'w') # Reopen the JamReminder file in the WRITE mode
                 jamReminderFile.write(nowFormatted) # Write the time we sent the reminder (aka now)
 
-                yield from bot.send_message(channel, "It is " + str(dtprint) + ". The One Hour Game Jam starts in " + formattedDiff[2] + " and " + formattedDiff[3] + ".")
+                yield from bot.send_message(channel, "@everyone The One Hour Game Jam starts within an hour! Hype<:lime:322433693111287838>!!")
+                #endregion
+                #region Tweet Reminder
+                if (Config.usingTwitterBot):
+                    channel = discord.Object(id=Config.DEBUG_modChannel)  ## this is the 1hgj discord announcement channel
+                    offset = datetime.datetime.utcnow() - server.getLastTweet()  # Get the time since last tweet
 
-            jamReminderFile.close() # Make sure to close the file stream		
+                    if (offset.total_seconds() >= Config.twitter_timeSinceTweet):  # Has **Config.twitter_timeSinceTweet** passed since the last tweet?
+                        tweetBot.tweet("The #1hgj starts in an hour! More info at onehourgamejam.com #gamedev #indiedev #gamejam")  # yield from bot.send_message(channel, tweetBot.tweet(value))
+                        yield from bot.send_message(channel, "Tweet sent")
+                #endregion
+
+            jamReminderFile.close() # Make sure to close the file stream    
 
         yield from asyncio.sleep(60) # Run task every 60 seconds
+
+@asyncio.coroutine
+def voteReminderTask():
+    yield from bot.wait_until_ready()
+
+    while not bot.is_closed:
+        if Config.usingJamReminder:
+            now = datetime.datetime.utcnow()
+            dtcheck = now.strftime("%a %H") ## dateime object for checking
+
+            voteReminderFile = io.open(Config.reminder_lastVoteReminderFile, 'r')
+            fileContents = voteReminderFile.read() # Read the contents of the file
+
+            lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H:00:00").__str__() # Convert the JamReminder file into a datetime object
+            nowFormatted = now.strftime("%Y-%m-%d %H:00:00").__str__() # Format 'now' into the readable format
+
+            lastReminderDay = datetime.datetime.strptime(lastReminder, "%Y-%m-%d %H:00:00").weekday()
+
+            response = ""
+            if dtcheck == "Fri 12" and lastReminderDay == 5:
+                response = "Tomorrow is One Hour Game Jam time! Don't forget to vote on your favourite themes :slight_smile: " + Config.links_themes
+
+            elif dtcheck == "Sat 21" and lastReminderDay == 4 and now.minute == 30:
+                response = "The One Hour Game Jam is slowly finishing up. Hopefully you had fun <:lime:322433693111287838> Don't forget to vote on the next jam's theme here: " + Config.links_themes + \
+                           "\n*PS Don't worry if you haven't finished your game by now. You have until the next jam to submit and we encourage you to finish your game :heart:*"
+
+            if response != "":
+                channel = discord.Object(id=Config.reminder_VoteChannel)
+
+                voteReminderFile = io.open(Config.reminder_lastJamReminderFile, 'w')
+                voteReminderFile.write(nowFormatted)
+
+                yield from bot.send_message(channel, response)
+
+            voteReminderFile.close() # Make sure to close the file stream
+        yield from asyncio.sleep(60)
 #endregion
 
 #region Dynamic Commands
@@ -100,7 +152,7 @@ async def lastTheme():
     if(Config.usingLastTheme):
         await bot.say(Config.commands_getLastTheme.format(JamInfo.getLastTheme()))
 
-@bot.command(aliases=['Time', "TIME"])
+@bot.command(aliases=['Time', "TIME","timeleft", "timeLeft", "TIMELEFT", "Timeleft"])
 async def time():
     timeDiff = JamInfo.getTimeDiff() # Get the time remaining
     response = Config.commands_getTime_Upcoming
@@ -126,15 +178,31 @@ async def randomTheme():
     if(Config.usingRandomTheme):
         await bot.say("Your random theme is: " + server.getRandomTheme())
 
-@bot.command(aliases=["addrandomtheme", "AddRandomTheme", "Addrandomtheme"])
-async def addRandomTheme(name : str):
+@bot.command(aliases=["addrandomtheme", "AddRandomTheme", "Addrandomtheme"], pass_context=True)
+async def addRandomTheme(ctx):
+    message = str(ctx.message.content)
+
+    name = message.lower().replace("!addrandomtheme ", "")
+    name = name.replace("!addrandomtheme", "")
+
+    name = name.replace("!AddRandomTheme ", "")
+    name = name.replace("!AddRandomTheme", "")
+
+    name = name.replace("!Addrandomtheme ", "")
+    name = name.replace("!Addrandomtheme", "")
+
+    name = name.replace("!addRandomTheme ", "")
+    name = name.replace("!addRandomTheme", "")
+
+    name = name.replace('"', "")
+
     if (Config.usingRandomTheme):
-        name = name.lower()
-        hash = server.generateHash(name)
-
-        server.addRandomTheme(name, hash)
-
-        await bot.say("Added '" + name + "' to random themes.")
+        if(name != ""):
+            hash = server.generateHash(name)
+            server.addRandomTheme(name, hash)
+            await bot.say("Added '" + name + "' to random themes.")
+        else:
+            await bot.say("Random theme cannot be an empty string")
 
 #endregion
 
@@ -229,6 +297,10 @@ async def submit():
 async def login():
     await bot.say(Config.commands_login)
 
+@bot.command(aliases=["Shirt", "SHRIT", "merch", "MERCH"])
+async def shirt():
+    await bot.say(Config.commands_merch)
+
 #endregion
 
 #region Easter Egg Commands
@@ -238,6 +310,14 @@ ABOUT:
 Static commands that are in here just
 for fun and have no explicit function.
 '''
+
+@bot.command(pass_context=True)
+async def hyoe(ctx, member : discord.Member = None):
+    if(Config.usingEasterEggs):
+        if member is None:
+            member = ctx.message.author
+        await bot.say(":(")
+        await bot.send_message(member, "That command will only be implemented if you vote for it here: " + Config.links_GitHubIssues)
 
 @bot.command(aliases=["Hype"])
 async def hype():
@@ -299,9 +379,15 @@ async def panic():
 async def hypeSquad():
     if (Config.usingEasterEggs):
         await bot.say(Config.easterEggs_hypeSquad)
+
+@bot.command(aliases = ["botsnack", "BotSnack", "snack", "Snack"])
+async def botSnack():
+    if (Config.usingEasterEggs):
+        await bot.say(Config.easterEggs_snack)
 #endregion
 
 #endregion
 
 bot.loop.create_task(jamReminderTask())
+bot.loop.create_task(voteReminderTask())
 bot.run(Config.bot_key)
