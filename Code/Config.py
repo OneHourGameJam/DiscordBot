@@ -10,7 +10,6 @@ dir_path = os.path.dirname(os.path.realpath(__file__)) # The project directory
 #region DEBUG
 DEBUG = True
 DEBUG_channel = '394169935510896643'
-DEBUG_reminder_lastReminderFile = dir_path + "/DEBUG/JamReminder.txt"
 
 DEBUG_modChannel = '376327006406836224'
 #endregion
@@ -25,10 +24,7 @@ usingJamReminder = True
 
 #region Jam Reminder
 reminder_JamChannel = '307620502158049281'
-reminder_lastJamReminderFile = dir_path + "/BotFiles/JamReminder.txt"
-reminder_JamTime = "Sat 19"
 
-reminder_lastVoteReminderFile = dir_path + "/BotFiles/VoteReminder.txt"
 reminder_VoteChannel = '285133441937440770'
 #endregion
 

@@ -55,40 +55,19 @@ def jamReminderTask():
     while not bot.is_closed:
 
         if Config.usingJamReminder:
-            # get the current datetime
+            channel = discord.Object(id=Config.reminder_JamChannel)
+
             now = datetime.datetime.utcnow()
-            dtprint=now.strftime("%A %H:%M") ## datetime for printing
-            dtcheck=now.strftime("%a %H") ## dateime object for checking
+            now = now.replace(second=0, microsecond=0)
+            upcomingJamDate = JamInfo.getUpcomingJamDate()
 
-            jamReminderFile = io.open(Config.reminder_lastJamReminderFile, 'r')  # Open the JamReminder file where the last reminder info is stored
-            fileContents = jamReminderFile.read() # Read the contents of the file
-
-            lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H:00:00").__str__() # Convert the JamReminder file into a datetime object
-            nowFormatted = now.strftime("%Y-%m-%d %H:00:00").__str__() # Format 'now' into the readable format
-
-            # check if the time is right AND if we already sent a message to the channel
-            if dtcheck == Config.reminder_JamTime and lastReminder != nowFormatted:
-                #region Jam Reminder
-                channel = discord.Object(id=Config.reminder_JamChannel)   ## this is the 1hgj discord announcement channel
-
-                jamReminderFile = io.open(Config.reminder_lastJamReminderFile, 'w') # Reopen the JamReminder file in the WRITE mode
-                jamReminderFile.write(nowFormatted) # Write the time we sent the reminder (aka now)
-
+            if now == upcomingJamDate:
                 yield from bot.send_message(channel, "@everyone The One Hour Game Jam starts within an hour! Hype<:lime:322433693111287838>!!")
-                #endregion
-                #region Tweet Reminder
-                if (Config.usingTwitterBot):
-                    channel = discord.Object(id=Config.DEBUG_modChannel)  ## this is the 1hgj discord announcement channel
-                    offset = datetime.datetime.utcnow() - server.getLastTweet()  # Get the time since last tweet
 
-                    if (offset.total_seconds() >= Config.twitter_timeSinceTweet):  # Has **Config.twitter_timeSinceTweet** passed since the last tweet?
-                        tweetBot.tweet("The #1hgj starts in an hour! More info at onehourgamejam.com #gamedev #indiedev #gamejam")  # yield from bot.send_message(channel, tweetBot.tweet(value))
-                        yield from bot.send_message(channel, "Tweet sent")
-                #endregion
+                tweetBot.tweet("The #1hgj starts in an hour! More info at onehourgamejam.com #gamedev #indiedev #gamejam")  # yield from bot.send_message(channel, tweetBot.tweet(value))
+                yield from bot.send_message(channel, "Tweet sent")
 
-            jamReminderFile.close() # Make sure to close the file stream    
-
-        yield from asyncio.sleep(60) # Run task every 60 seconds
+        yield from asyncio.sleep(60)  # Run task every 60 seconds
 
 @asyncio.coroutine
 def voteReminderTask():
