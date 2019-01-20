@@ -17,13 +17,6 @@ import server
 
 bot = commands.Bot(command_prefix="!")
 
-'''@bot.event
-@asyncio.coroutine
-def on_message(message):
-    if ('heck' in message.content.lower()) or ('frick' in message.content.lower()):
-        yield from bot.send_message(message.channel, Config.easterEggs_frickLink)
-    yield from bot.process_commands(message)'''
-
 #region Debug
 
 @bot.command()
@@ -47,7 +40,17 @@ def on_ready():
 #endregion
 
 #region Jam Reminder
-# function for the bot that will be called every 60 seconds.
+
+def checkTime(time : datetime.datetime):
+    now = datetime.datetime.utcnow()
+    now = now.replace(second=0, microsecond=0)
+    time = time.replace(second=0, microsecond=0)
+
+    if now == time:
+        return True
+    else:
+        return False
+
 @asyncio.coroutine
 def jamReminderTask():
     yield from bot.wait_until_ready()
@@ -55,55 +58,44 @@ def jamReminderTask():
     while not bot.is_closed:
 
         if Config.usingJamReminder:
-            channel = discord.Object(id=Config.reminder_JamChannel)
+            startTime = "8PM UTC, Midday PST, 3PM EST, 9PM CET and 7AM AEDT." #Daylight wasting
+            #startTime = "8PM UTC, 1 PM PST, 4PM EST, 10PM CET and 6AM ACT." # Daylight savings
 
-            now = datetime.datetime.utcnow()
-            now = now.replace(second=0, microsecond=0)
-            upcomingJamDate = JamInfo.getUpcomingJamDate()
-
-            if now == upcomingJamDate:
-                yield from bot.send_message(channel, "@everyone The One Hour Game Jam starts within an hour! Hype<:lime:322433693111287838>!!")
-
-                tweetBot.tweet("The #1hgj starts in an hour! More info at onehourgamejam.com #gamedev #indiedev #gamejam")  # yield from bot.send_message(channel, tweetBot.tweet(value))
-                yield from bot.send_message(channel, "Tweet sent")
+            #24 hour reminder
+            if checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=24)):
+                tweetBot.tweet("1 Hour Game Jam starts in 24h! That's at "+ startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #16 hour reminder
+            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=16)):
+                tweetBot.tweet("1 Hour Game Jam starts in 16h! That's at "+ startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #8 hour reminder
+            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=8)):
+                tweetBot.tweet("1 Hour Game Jam starts in 8h! That's at "+ startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #4 hour reminder
+            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=4)):
+                tweetBot.tweet("1 Hour Game Jam starts in 4h! Participate at https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #2 hour reminder
+            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=2)):
+                tweetBot.tweet("1 Hour Game Jam starts in 2h! Participate at https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #1 hour reminder
+            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=1)):
+                tweetBot.tweet("1 Hour Game Jam starts in 1h! Join us on Discord at https://discord.gg/J86uTu9 " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.reminder_JamChannel), "@everyone The One Hour Game Jam starts within an hour! Hype<:lime:322433693111287838>!!")
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #20 min reminder
+            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(minutes=20)):
+                tweetBot.tweet("1 Hour Game Jam starts in 20 minutes! Join us on Discord at https://discord.gg/J86uTu9 " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            #START reminder
+            elif checkTime(JamInfo.getUpcomingJamDate()):
+                tweetBot.tweet("1 hour game jam " + JamInfo.getCurrentJamNumber() + " started. The theme is: '" + JamInfo.getCurrentTheme() + "'. Participate at https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
 
         yield from asyncio.sleep(60)  # Run task every 60 seconds
-
-@asyncio.coroutine
-def voteReminderTask():
-    yield from bot.wait_until_ready()
-
-    while not bot.is_closed:
-        if Config.usingJamReminder:
-            now = datetime.datetime.utcnow()
-            dtcheck = now.strftime("%a %H") ## dateime object for checking
-
-            voteReminderFile = io.open(Config.reminder_lastVoteReminderFile, 'r')
-            fileContents = voteReminderFile.read() # Read the contents of the file
-
-            lastReminder = datetime.datetime.strptime(fileContents, "%Y-%m-%d %H:00:00").__str__() # Convert the JamReminder file into a datetime object
-            nowFormatted = now.strftime("%Y-%m-%d %H:00:00").__str__() # Format 'now' into the readable format
-
-            lastReminderDay = datetime.datetime.strptime(lastReminder, "%Y-%m-%d %H:00:00").weekday()
-
-            response = ""
-            if dtcheck == "Fri 12" and lastReminderDay == 5:
-                response = "Tomorrow is One Hour Game Jam time! Don't forget to vote on your favourite themes :slight_smile: " + Config.links_themes
-
-            elif dtcheck == "Sat 21" and lastReminderDay == 4 and now.minute == 30:
-                response = "The One Hour Game Jam is slowly finishing up. Hopefully you had fun <:lime:322433693111287838> Don't forget to vote on the next jam's theme here: " + Config.links_themes + \
-                           "\n*PS Don't worry if you haven't finished your game by now. You have until the next jam to submit and we encourage you to finish your game :heart:*"
-
-            if response != "":
-                channel = discord.Object(id=Config.reminder_VoteChannel)
-
-                voteReminderFile = io.open(Config.reminder_lastJamReminderFile, 'w')
-                voteReminderFile.write(nowFormatted)
-
-                yield from bot.send_message(channel, response)
-
-            voteReminderFile.close() # Make sure to close the file stream
-        yield from asyncio.sleep(60)
 #endregion
 
 #region Dynamic Commands
@@ -368,5 +360,4 @@ async def botSnack():
 #endregion
 
 bot.loop.create_task(jamReminderTask())
-bot.loop.create_task(voteReminderTask())
 bot.run(Config.bot_key)

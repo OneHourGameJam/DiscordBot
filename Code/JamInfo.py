@@ -169,3 +169,13 @@ def getUpcomingJamDate():
     jams = [Jam(**k) for k in upcomingJams] # Get an array of jams in 'upcoming_jams' (Jam is a named tuple -- see above in region "JSON")
 
     return datetime.datetime.strptime(jams[0].start_datetime, "%Y-%m-%d %H:%M:%S")  # Return the datetime
+
+def getCurrentJamNumber():
+    r"""
+    :return: str
+    """
+    info = __getInfo()
+    currentJams = info['current_jams']
+    jams = [Jam(**k) for k in currentJams]
+
+    return jams[0].number

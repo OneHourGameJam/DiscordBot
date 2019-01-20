@@ -11,7 +11,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__)) # The project directory
 DEBUG = True
 DEBUG_channel = '394169935510896643'
 
-DEBUG_modChannel = '376327006406836224'
+DEBUG_modChannel = '307628493473054720'
 #endregion
 
 #region Enabling Features
@@ -42,6 +42,8 @@ twitter_consumerKey = SecretKeys.twitter_consumerKey
 twitter_consumerSecret = SecretKeys.twitter_consumerSecret
 twitter_accessToken = SecretKeys.twitter_accessToken
 twitter_tokenSecret = SecretKeys.twitter_tokenSecret
+
+twitter_hashtags = "#1hgj #gamedev #gamejam #indiedev #games"
 #endregion
 
 #region Server config
