@@ -5,7 +5,6 @@ Contains functions that deal with the One Hour Game Jam API (http://onehourgamej
 import json
 import requests
 import datetime
-import time
 from collections import namedtuple
 
 import Config

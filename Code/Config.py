@@ -2,6 +2,8 @@
 ABOUT:
 Stores custom variables the bot uses
 """
+import SecretKeys
+
 import os
 dir_path = os.path.dirname(os.path.realpath(__file__)) # The project directory
 
@@ -31,23 +33,23 @@ reminder_VoteChannel = '285133441937440770'
 #endregion
 
 #region Discord API keys
-bot_key = "" # The Discord bot key used in bot.run
+bot_key = SecretKeys.botKey  # The Discord bot key used in bot.run
 #endregion
 
 #region Twitter API keys
 
 # The minimum amount that needs to pass until a new tweet is allowed (in seconds)
-twitter_timeSinceTweet = 28800 # Default: 28800 sec => 8 hours
+twitter_timeSinceTweet = 28800  # Default: 28800 sec => 8 hours
 
 # Keys used in tweetbot.py
-twitter_consumerKey = ""
-twitter_consumerSecret = ""
-twitter_accessToken = ""
-twitter_tokenSecret = ""
+twitter_consumerKey = SecretKeys.twitter_consumerKey
+twitter_consumerSecret = SecretKeys.twitter_consumerSecret
+twitter_accessToken = SecretKeys.twitter_accessToken
+twitter_tokenSecret = SecretKeys.twitter_tokenSecret
 #endregion
 
 #region Server config
-server_secretKey = ""
+server_secretKey = SecretKeys.server_secretKey
 
 server_changeLastTweetURL = "http://devillime.com/ohgj/bot/changelasttweet.php?"
 server_displayLastTweetURL = "http://devillime.com/ohgj/bot/displaylasttweet.php"
@@ -115,7 +117,6 @@ commands_merch = "There are many online tshirt printing services available, e.g.
 
 #region Easter Eggs
 
-#The different links the !hype command prints
 easterEggs_hypeLinks = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays",
 "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif", "https://www.youtube.com/watch?v=zpGU355C0ak", "https://www.youtube.com/watch?v=s6E3xVz01bw", "https://www.youtube.com/watch?v=FDs6dADBmI0"]
 easterEggs_conquerWorld = "https://www.youtube.com/watch?v=XJYmyYzuTa8"
@@ -130,7 +131,5 @@ easterEggs_panic = "https://cdn.discordapp.com/attachments/307910914588540929/40
 easterEggs_hypeSquad = "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif"
 easterEggs_snack = "I have type II diabetes, you know that I can't eat that, Liam."
 easterEggs_frickLink = "https://media.discordapp.net/attachments/326736434763661312/485539223819255828/unknown.png"
-
-#endregion
 
 #endregion
