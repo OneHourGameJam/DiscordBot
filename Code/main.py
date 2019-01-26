@@ -61,39 +61,41 @@ def jamReminderTask():
             startTime = "8PM UTC, Midday PST, 3PM EST, 9PM CET and 7AM AEDT." #Daylight wasting
             #startTime = "8PM UTC, 1 PM PST, 4PM EST, 10PM CET and 6AM ACT." # Daylight savings
 
+            nextJamDate = JamInfo.getUpcomingJamDate()
+
             #24 hour reminder
-            if checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=24)):
-                tweetBot.tweet("1 Hour Game Jam starts in 24h! That's at "+ startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            if checkTime(nextJamDate - datetime.timedelta(hours=24)):
+                tweetBot.tweet("1 Hour Game Jam starts in 24h! That's at " + startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 24h Tweet sent")
             #16 hour reminder
-            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=16)):
-                tweetBot.tweet("1 Hour Game Jam starts in 16h! That's at "+ startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            elif checkTime(nextJamDate - datetime.timedelta(hours=16)):
+                tweetBot.tweet("1 Hour Game Jam starts in 16h! That's at " + startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 16h Tweet sent")
             #8 hour reminder
-            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=8)):
-                tweetBot.tweet("1 Hour Game Jam starts in 8h! That's at "+ startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+            elif checkTime(nextJamDate - datetime.timedelta(hours=8)):
+                tweetBot.tweet("1 Hour Game Jam starts in 8h! That's at " + startTime + " https://onehourgamejam.com " + Config.twitter_hashtags)
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 8h Tweet sent")
             #4 hour reminder
-            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=4)):
+            elif checkTime(nextJamDate - datetime.timedelta(hours=4)):
                 tweetBot.tweet("1 Hour Game Jam starts in 4h! Participate at https://onehourgamejam.com " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 4h Tweet sent")
             #2 hour reminder
-            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=2)):
+            elif checkTime(nextJamDate - datetime.timedelta(hours=2)):
                 tweetBot.tweet("1 Hour Game Jam starts in 2h! Participate at https://onehourgamejam.com " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 2h Tweet sent")
             #1 hour reminder
-            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(hours=1)):
+            elif checkTime(nextJamDate - datetime.timedelta(hours=1)):
                 tweetBot.tweet("1 Hour Game Jam starts in 1h! Join us on Discord at https://discord.gg/J86uTu9 " + Config.twitter_hashtags)
                 yield from bot.send_message(discord.Object(id=Config.reminder_JamChannel), "@everyone The One Hour Game Jam starts within an hour! Hype<:lime:322433693111287838>!!")
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 1h Tweet sent")
             #20 min reminder
-            elif checkTime(JamInfo.getUpcomingJamDate() - datetime.timedelta(minutes=20)):
+            elif checkTime(nextJamDate - datetime.timedelta(minutes=20)):
                 tweetBot.tweet("1 Hour Game Jam starts in 20 minutes! Join us on Discord at https://discord.gg/J86uTu9 " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> 20min Tweet sent")
             #START reminder
-            elif checkTime(JamInfo.getUpcomingJamDate()):
+            elif checkTime(nextJamDate):
                 tweetBot.tweet("1 hour game jam " + JamInfo.getCurrentJamNumber() + " started. The theme is: '" + JamInfo.getCurrentTheme() + "'. Participate at https://onehourgamejam.com " + Config.twitter_hashtags)
-                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Tweet sent")
+                yield from bot.send_message(discord.Object(id=Config.DEBUG_modChannel), "<@111890906055020544> Jam start Tweet sent")
 
         yield from asyncio.sleep(60)  # Run task every 60 seconds
 #endregion
