@@ -190,7 +190,7 @@ async def tweetReminder(ctx, member : discord.Member = None):
         if member is None:
             member = ctx.message.author
 
-        if "moderator" in [y.name.lower() for y in member.roles]: # Check if the user is a moderator
+        if Config.adminRoleName.lower() in [y.name.lower() for y in member.roles]: # Check if the user is a moderator
             offset = datetime.datetime.utcnow() - server.getLastTweet() # Get the time since last tweet
 
             if(offset.total_seconds() >= Config.twitter_timeSinceTweet): # Has **Config.twitter_timeSinceTweet** passed since the last tweet?
@@ -245,7 +245,7 @@ with links to the One Hour Game Jam website.
 You can edit the content of these commands in Config.py
 '''
 
-bot.remove_command("help")  #The discord.py library comes with a default definition of the 'help' command so we remove the pre-defined one before we can define a new one in the next line
+bot.remove_command("help")  # discord.py comes with a default definition of 'help' which we need to remove
 @bot.command(aliases=["help", "Help"])
 async def commands():
     await bot.say(Config.commands_botCommands)
@@ -274,6 +274,10 @@ async def login():
 async def shirt():
     await bot.say(Config.commands_merch)
 
+@bot.command(aliases=["issue", "suggestion", "suggestions", "github"])
+async def issues():
+    await bot.say("Submit issues or suggestions here: " + Config.links_GitHubIssues)
+
 #endregion
 
 #region Easter Egg Commands
@@ -290,7 +294,7 @@ async def hyoe(ctx, member : discord.Member = None):
         if member is None:
             member = ctx.message.author
         await bot.say(":(")
-        await bot.send_message(member, "That command will only be implemented if you vote for it here: " + Config.links_GitHubIssues)
+        await bot.send_message(member, "That command will only be implemented if you vote for it here: " + Config.links_Hyoe_Github)
 
 @bot.command(aliases=["Hype"])
 async def hype():
@@ -306,57 +310,47 @@ async def hypeAll():
 @bot.command()
 async def conquerWorld():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_conquerWorld)
-
-@bot.command()
-async def hottestManAlive():
-    if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_hottestManAlive)
-
-@bot.command()
-async def eminem():
-    if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_eminem)
+        await bot.say("https://www.youtube.com/watch?v=XJYmyYzuTa8")
 
 @bot.command()
 async def lime():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_lime)
+        await bot.say("What is life? <:lime:322433693111287838>")
 
 @bot.command()
 async def limes():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_limes)
+        await bot.say("What's a limes? :confused:")
 
 @bot.command(aliases=["hypeTrain", "HypeTrain"])
 async def hypetrain():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_hypeTrain)
+        await bot.say("https://youtu.be/gMkrvTraVZ0")
 
 @bot.command(aliases=["weirdHypeTrain", "WeirdHypeTrain"])
 async def weirdhypetrain():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_weirdHypeTrain)
+        await bot.say("http://youtu.be/lSxh-UK7Ays")
 
 @bot.command(aliases=["slovakhypetrain", "SlovakHypeTrain"])
 async def slovakHypeTrain():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_slovakHypeTrain)
+        await bot.say("https://www.youtube.com/watch?v=zpGU355C0ak")
 
 @bot.command()
 async def panic():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_panic)
+        await bot.say("https://cdn.discordapp.com/attachments/307910914588540929/401832495307292682/6112012013224turningoffyourcellphonewhenitgoesoffinclass.gif")
 
 @bot.command()
 async def hypeSquad():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_hypeSquad)
+        await bot.say("https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif")
 
 @bot.command(aliases = ["botsnack", "BotSnack", "snack", "Snack"])
 async def botSnack():
     if (Config.usingEasterEggs):
-        await bot.say(Config.easterEggs_snack)
+        await bot.say("I have type II diabetes, you know that I can't eat that, Liam.")
 #endregion
 
 #endregion

@@ -22,27 +22,27 @@ usingTwitterBot = True
 usingJamReminder = True
 #endregion
 
-#region Jam Reminder
-reminder_JamChannel = '307620502158049281'
+#Server settings
+adminRoleName = "moderator"
 
+reminder_JamChannel = '307620502158049281'
 reminder_VoteChannel = '285133441937440770'
 #endregion
 
-#region Discord API keys
+#region Secret keys
 bot_key = SecretKeys.botKey  # The Discord bot key used in bot.run
-#endregion
-
-#region Twitter API keys
-
-# The minimum amount that needs to pass until a new tweet is allowed (in seconds)
-twitter_timeSinceTweet = 28800  # Default: 28800 sec => 8 hours
 
 # Keys used in tweetbot.py
 twitter_consumerKey = SecretKeys.twitter_consumerKey
 twitter_consumerSecret = SecretKeys.twitter_consumerSecret
 twitter_accessToken = SecretKeys.twitter_accessToken
 twitter_tokenSecret = SecretKeys.twitter_tokenSecret
+#endregion
 
+#region Twitter
+
+# The minimum amount that needs to pass until a new tweet is allowed (in seconds)
+twitter_timeSinceTweet = 28800  # Default: 28800 sec => 8 hours
 twitter_hashtags = "#1hgj #gamedev #gamejam #indiedev #games"
 #endregion
 
@@ -72,7 +72,9 @@ links_themes = "https://onehourgamejam.com/?page=themes" # The link the the them
 links_submit = "https://onehourgamejam.com/?page=submit" # The link to the game submission page
 links_login = "https://onehourgamejam.com/?page=login" # The link to the log in/sign up page
 
-links_GitHubIssues = "https://github.com/OneHourGameJam/OneHourGameJam-discord-bot/issues/2"
+links_GitHubIssues = "https://github.com/OneHourGameJam/OneHourGameJam-discord-bot/issues/"
+
+links_Hyoe_Github = "https://github.com/OneHourGameJam/OneHourGameJam-discord-bot/issues/2"
 #endregion
 
 #region Static commands
@@ -95,9 +97,7 @@ commands_botCommands = \
  \
         "!submit\n" \
         "!vote\n" \
-        "!login\n\n" \
- \
-        "!tweetReminder (Mod only)" \
+        "!login" \
         "```"
 commands_aboutOHGJ = "The One Hour Game Jam happens every Saturday at 20:00 UTC and ends at 21:00 UTC. You have until the next jam to submit your game." \
                      "\nJoin us, learn and just have fun!"
@@ -112,22 +112,10 @@ commands_merch = "There are many online tshirt printing services available, e.g.
     "If you just want to order a finished shirt, you can use this finished design: https://goo.gl/HybjKA\n\n" \
 \
     "OneHourGamejam is not affiliated with any of the listed printing services and we get no profit when you order a shirt from them."
+#endregion
 
 #region Easter Eggs
 
 easterEggs_hypeLinks = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays",
 "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif", "https://www.youtube.com/watch?v=zpGU355C0ak", "https://www.youtube.com/watch?v=s6E3xVz01bw", "https://www.youtube.com/watch?v=FDs6dADBmI0"]
-easterEggs_conquerWorld = "https://www.youtube.com/watch?v=XJYmyYzuTa8"
-easterEggs_hottestManAlive = "http://devillime.com/uploads/image/Gilmour.jpg"
-easterEggs_eminem = "Chicka, chicka, chicka, Slim Shady\nhttps://www.youtube.com/watch?v=IdS3WVYr834"
-easterEggs_lime = "What is life? <:lime:322433693111287838>"
-easterEggs_limes = "What's a limes? :confused:"
-easterEggs_hypeTrain = "https://youtu.be/gMkrvTraVZ0"
-easterEggs_weirdHypeTrain =  "http://youtu.be/lSxh-UK7Ays"
-easterEggs_slovakHypeTrain = "https://www.youtube.com/watch?v=zpGU355C0ak"
-easterEggs_panic = "https://cdn.discordapp.com/attachments/307910914588540929/401832495307292682/6112012013224turningoffyourcellphonewhenitgoesoffinclass.gif"
-easterEggs_hypeSquad = "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif"
-easterEggs_snack = "I have type II diabetes, you know that I can't eat that, Liam."
-easterEggs_frickLink = "https://media.discordapp.net/attachments/326736434763661312/485539223819255828/unknown.png"
-
 #endregion
