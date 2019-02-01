@@ -5,31 +5,31 @@ Stores custom variables the bot uses
 import SecretKeys
 
 import os
-dir_path = os.path.dirname(os.path.realpath(__file__)) # The project directory
+directory_path = os.path.dirname(os.path.realpath(__file__))
 
-#region DEBUG
+# region DEBUG
 DEBUG = True
 DEBUG_channel = '394169935510896643'
 
 DEBUG_modChannel = '307628493473054720'
-#endregion
+# endregion
 
-#region Enabling Features
+# region Enabling Features
 usingLastTheme = True
 usingRandomTheme = True
 usingEasterEggs = True
 usingTwitterBot = True
 usingJamReminder = True
-#endregion
+# endregion
 
-#Server settings
+# Server settings
 adminRoleName = "moderator"
 
 reminder_JamChannel = '307620502158049281'
 reminder_VoteChannel = '285133441937440770'
-#endregion
+# endregion
 
-#region Secret keys
+# region Secret keys
 bot_key = SecretKeys.botKey  # The Discord bot key used in bot.run
 
 # Keys used in tweetbot.py
@@ -37,16 +37,16 @@ twitter_consumerKey = SecretKeys.twitter_consumerKey
 twitter_consumerSecret = SecretKeys.twitter_consumerSecret
 twitter_accessToken = SecretKeys.twitter_accessToken
 twitter_tokenSecret = SecretKeys.twitter_tokenSecret
-#endregion
+# endregion
 
-#region Twitter
+# region Twitter
 
 # The minimum amount that needs to pass until a new tweet is allowed (in seconds)
 twitter_timeSinceTweet = 28800  # Default: 28800 sec => 8 hours
 twitter_hashtags = "#1hgj #gamedev #gamejam #indiedev #games"
-#endregion
+# endregion
 
-#region Server config
+# region Server config
 server_secretKey = SecretKeys.server_secretKey
 
 server_changeLastTweetURL = "http://devillime.com/ohgj/bot/changelasttweet.php?"
@@ -54,30 +54,30 @@ server_displayLastTweetURL = "http://devillime.com/ohgj/bot/displaylasttweet.php
 
 server_randomThemeURL = "http://devillime.com/ohgj/bot/addtheme.php?"
 server_displayThemeURL = "http://devillime.com/ohgj/bot/displaytheme.php"
-#endregion
+# endregion
 
-#region Dynamic Command Responses
+# region Dynamic Command Responses
 commands_themeNotAnnounced = "The theme hasn't been announced yet."
 commands_theme = "The theme is: \"{}\""
 commands_getLastTheme = "The previous jam's theme was: '{}'"
 commands_getTime_Upcoming = "{} left until the next jam."
 commands_getTime_Ongoing = "{} left."
-#endregion
+# endregion
 
-#region One Hour Game Jam Links
-links_API = "https://onehourgamejam.com/api/nextjam/" # The link to the NextJam API
+# region One Hour Game Jam Links
+links_API = "https://onehourgamejam.com/api/nextjam/"  # The link to the NextJam API
 
-links_rules = "https://onehourgamejam.com/?page=rules" # The link to the rules page
-links_themes = "https://onehourgamejam.com/?page=themes" # The link the the theme voting page
-links_submit = "https://onehourgamejam.com/?page=submit" # The link to the game submission page
-links_login = "https://onehourgamejam.com/?page=login" # The link to the log in/sign up page
+links_rules = "https://onehourgamejam.com/?page=rules"  # The link to the rules page
+links_themes = "https://onehourgamejam.com/?page=themes"  # The link the the theme voting page
+links_submit = "https://onehourgamejam.com/?page=submit"  # The link to the game submission page
+links_login = "https://onehourgamejam.com/?page=login"  # The link to the log in/sign up page
 
 links_GitHubIssues = "https://github.com/OneHourGameJam/OneHourGameJam-discord-bot/issues/"
 
 links_Hyoe_Github = "https://github.com/OneHourGameJam/OneHourGameJam-discord-bot/issues/2"
-#endregion
+# endregion
 
-#region Static commands
+# region Static commands
 
 # A list of bot commands
 commands_botCommands = \
@@ -112,10 +112,11 @@ commands_merch = "There are many online tshirt printing services available, e.g.
     "If you just want to order a finished shirt, you can use this finished design: https://goo.gl/HybjKA\n\n" \
 \
     "OneHourGamejam is not affiliated with any of the listed printing services and we get no profit when you order a shirt from them."
-#endregion
+# endregion
 
-#region Easter Eggs
+# region Easter Eggs
 
 easterEggs_hypeLinks = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays",
 "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif", "https://www.youtube.com/watch?v=zpGU355C0ak", "https://www.youtube.com/watch?v=s6E3xVz01bw", "https://www.youtube.com/watch?v=FDs6dADBmI0"]
-#endregion
+
+# endregion
