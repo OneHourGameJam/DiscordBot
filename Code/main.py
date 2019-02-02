@@ -181,19 +181,25 @@ async def time():
     await bot.say(response)
 
 
-@bot.command(aliases=[])
-async def setAnnouncements(option: str):
-    if option.lower() == "on":
-        Config.usingJamReminder = True
-        Config.usingAutoTwitterBot = True
-        await bot.say("On")
+@bot.command(aliases=[], pass_context=True)
+async def setAnnouncements(ctx, option):
+    member = ctx.message.author
+    if Config.adminRoleName.lower() in [y.name.lower() for y in member.roles]:  # Check if user has correct role
 
-    elif option.lower() == "off":
-        Config.usingJamReminder = False
-        Config.usingAutoTwitterBot = False
-        await bot.say("Off")
+        if option.lower() == "on":
+            Config.usingJamReminder = True
+            Config.usingAutoTwitterBot = True
+            await bot.say("Announcements: **On**")
+
+        elif option.lower() == "off":
+            Config.usingJamReminder = False
+            Config.usingAutoTwitterBot = False
+            await bot.say("Announcements: **Off**")
+        else:
+            await bot.say("Unknown command: \"" + option + "\"")
+
     else:
-        await bot.say("Unknown command: \"" + option + "\"")
+        await bot.say("You do not have the correct role.")
 
 # endregion
 
