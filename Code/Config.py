@@ -19,6 +19,7 @@ usingLastTheme = True
 usingRandomTheme = True
 usingEasterEggs = True
 usingTwitterBot = True
+usingAutoTwitterBot = True
 usingJamReminder = True
 # endregion
 
@@ -26,7 +27,6 @@ usingJamReminder = True
 adminRoleName = "moderator"
 
 reminder_JamChannel = '307620502158049281'
-reminder_VoteChannel = '285133441937440770'
 # endregion
 
 # region Secret keys
