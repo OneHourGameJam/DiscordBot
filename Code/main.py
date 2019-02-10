@@ -374,7 +374,7 @@ async def hyoe(ctx, member: discord.Member = None):
     if Config.usingEasterEggs:
         if member is None:
             member = ctx.message.author
-        await bot.say(":(")
+        await bot.say(":)")
         await bot.send_message(member, "That command will only be implemented if you vote for it here: " + Config.links_Hyoe_Github)
 
 
