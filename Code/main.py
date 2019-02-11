@@ -446,10 +446,17 @@ async def hypeSquad():
         await bot.say("https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif")
 
 
-@bot.command(aliases=["botsnack", "BotSnack", "snack", "Snack"])
-async def botSnack():
+@bot.command(aliases=["botsnack", "BotSnack", "snack", "Snack"], pass_context = True)
+async def botSnack(ctx):
     if Config.usingEasterEggs:
-        await bot.say("I have type II diabetes, you know that I can't eat that, Liam.")
+        if ctx.message.author.id == "255517263724150787":
+            await bot.say("I have type II diabetes, you know that I can't eat that, Liam.")
+
+        else:
+            await bot.say("I don't take candy from strangers!")
+
+
+
 
 
 # endregion
