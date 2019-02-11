@@ -385,12 +385,17 @@ async def hype():
         await bot.say(link)
 
 
-@bot.command(aliases=["", "PANIC"])
+@bot.command(aliases=["PANIC"])
 async def panic():
     if Config.usingEasterEggs:
         link = random.choice(Config.easterEggs_panicLinks)
         await bot.say(link)
 
+
+@bot.command(aliases=["11-2-2019"])
+async def neverforgetti():
+    if Config.usingEasterEggs:
+        await bot.say("https://cdn.discordapp.com/attachments/544558735071379466/544583034310230039/4a333bac7f4d10b8bac58046faa3b238.png")
 
 
 @bot.command()
