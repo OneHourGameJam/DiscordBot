@@ -385,8 +385,8 @@ async def hype():
         await bot.say(link)
 
 
-@bot.command(aliases=["panic", "PANIC"])
-async def panicrandom():
+@bot.command(aliases=["", "PANIC"])
+async def panic():
     if Config.usingEasterEggs:
         link = random.choice(Config.easterEggs_panicLinks)
         await bot.say(link)
@@ -399,7 +399,7 @@ async def hypeAll():
         await bot.say(', '.join(Config.easterEggs_hypeLinks))
 
 
-@bot.command(aliases=["conquerworld", "CONQUERWORLD", "conquer world"])
+@bot.command(aliases=["conquerworld", "CONQUERWORLD"])
 async def conquerWorld():
     if Config.usingEasterEggs:
         await bot.say("https://www.youtube.com/watch?v=XJYmyYzuTa8")
