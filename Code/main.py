@@ -374,7 +374,7 @@ async def hyoe(ctx, member: discord.Member = None):
     if Config.usingEasterEggs:
         if member is None:
             member = ctx.message.author
-        await bot.say(":(")
+        await bot.say(":)")
         await bot.send_message(member, "That command will only be implemented if you vote for it here: " + Config.links_Hyoe_Github)
 
 
@@ -385,13 +385,21 @@ async def hype():
         await bot.say(link)
 
 
+@bot.command(aliases=["panic", "PANIC"])
+async def panicrandom():
+    if Config.usingEasterEggs:
+        link = random.choice(Config.easterEggs_panicLinks)
+        await bot.say(link)
+
+
+
 @bot.command()
 async def hypeAll():
     if Config.usingEasterEggs:
         await bot.say(', '.join(Config.easterEggs_hypeLinks))
 
 
-@bot.command()
+@bot.command(aliases=["conquerworld", "CONQUERWORLD", "conquer world"])
 async def conquerWorld():
     if Config.usingEasterEggs:
         await bot.say("https://www.youtube.com/watch?v=XJYmyYzuTa8")
@@ -425,13 +433,6 @@ async def weirdhypetrain():
 async def slovakHypeTrain():
     if Config.usingEasterEggs:
         await bot.say("https://www.youtube.com/watch?v=zpGU355C0ak")
-
-
-@bot.command()
-async def panic():
-    if Config.usingEasterEggs:
-        await bot.say(
-            "https://cdn.discordapp.com/attachments/307910914588540929/401832495307292682/6112012013224turningoffyourcellphonewhenitgoesoffinclass.gif")
 
 
 @bot.command()
