@@ -15,7 +15,7 @@ import JamInfo
 import tweetBot
 import server
 
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix=Config.commandPrefix)
 
 
 # region Debug
@@ -385,13 +385,20 @@ async def hype():
         await bot.say(link)
 
 
+@bot.command(aliases=["PANIC"])
+async def panic():
+    if Config.usingEasterEggs:
+        link = random.choice(Config.easterEggs_panicLinks)
+        await bot.say(link)
+
+        
 @bot.command()
 async def hypeAll():
     if Config.usingEasterEggs:
         await bot.say(', '.join(Config.easterEggs_hypeLinks))
 
 
-@bot.command()
+@bot.command(aliases=["conquerworld", "CONQUERWORLD"])
 async def conquerWorld():
     if Config.usingEasterEggs:
         await bot.say("https://www.youtube.com/watch?v=XJYmyYzuTa8")
@@ -428,22 +435,22 @@ async def slovakHypeTrain():
 
 
 @bot.command()
-async def panic():
-    if Config.usingEasterEggs:
-        await bot.say(
-            "https://cdn.discordapp.com/attachments/307910914588540929/401832495307292682/6112012013224turningoffyourcellphonewhenitgoesoffinclass.gif")
-
-
-@bot.command()
 async def hypeSquad():
     if Config.usingEasterEggs:
         await bot.say("https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif")
 
 
-@bot.command(aliases=["botsnack", "BotSnack", "snack", "Snack"])
-async def botSnack():
+@bot.command(aliases=["botsnack", "BotSnack", "snack", "Snack"], pass_context = True)
+async def botSnack(ctx):
     if Config.usingEasterEggs:
-        await bot.say("I have type II diabetes, you know that I can't eat that, Liam.")
+        if ctx.message.author.id == "255517263724150787":
+            await bot.say("I have type II diabetes, you know that I can't eat that, Liam.")
+
+        else:
+            await bot.say("I don't take candy from strangers!")
+
+
+
 
 
 # endregion
