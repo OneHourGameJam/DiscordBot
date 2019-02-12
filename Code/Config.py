@@ -122,7 +122,7 @@ easterEggs_hypeLinks = ["https://goo.gl/5TKpck", "https://youtu.be/gMkrvTraVZ0",
 "https://cdn.discordapp.com/attachments/326736434763661312/419582034202198016/kedengmeme.gif", "https://www.youtube.com/watch?v=zpGU355C0ak", "https://www.youtube.com/watch?v=s6E3xVz01bw", "https://www.youtube.com/watch?v=FDs6dADBmI0"]
 
 easterEggs_panicLinks = ["https://tenor.com/view/emergency-animated-cartoon-spongebob-squarepants-siren-gif-6224023", "https://tenor.com/view/spongebob-patrick-panic-run-scream-gif-4655431", "https://tenor.com/view/please-gif-5054709",
-                         "https://tenor.com/view/kermit-scared-freakout-gif-5351805", "https://tenor.com/view/spongebob-panicking-panic-run-stressed-gif-5303378"]
+                         "https://tenor.com/view/kermit-scared-freakout-gif-5351805", "https://tenor.com/view/spongebob-panicking-panic-run-stressed-gif-5303378"] 
 
 
 # endregion
