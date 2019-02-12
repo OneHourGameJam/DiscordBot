@@ -24,10 +24,9 @@ usingJamReminder = True
 # endregion
 
 # Server settings
+commandPrefix = "!"
+
 adminRoleName = "moderator"
-
-Prefix = "!"
-
 reminder_JamChannel = '307620502158049281'
 # endregion
 
