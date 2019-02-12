@@ -15,7 +15,7 @@ import JamInfo
 import tweetBot
 import server
 
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix=Config.Prefix)
 
 
 # region Debug
