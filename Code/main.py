@@ -68,8 +68,8 @@ def jamReminderTask():
 
     while not bot.is_closed:
 
-        start_time = "8PM UTC, Midday PST, 3PM EST, 9PM CET and 7AM AEDT."  # Daylight wasting
-        # start_time = "8PM UTC, 1 PM PST, 4PM EST, 10PM CET and 6AM ACT." # Daylight savings
+        #start_time = "8PM UTC, Midday PST, 3PM EST, 9PM CET and 7AM AEDT."  # Daylight wasting
+        start_time = "8PM UTC, 1 PM PST, 4PM EST, 9PM CET and 7AM ACT." # Daylight savings
 
         next_jam_date = JamInfo.getUpcomingJamDate()
 
@@ -169,14 +169,15 @@ async def time():
     formatted_diff = JamInfo.formatTime(time_diff)  # Get the formatted array
 
     if formatted_diff[0] != "":
-        response = response.format(
-            formatted_diff[0] + " " + formatted_diff[1] + " " + formatted_diff[2])  # Day + Hour + Min
-    elif formatted_diff[1] != "":
-        response = response.format(formatted_diff[1] + " " + formatted_diff[2])  # Hour + Min
-    elif formatted_diff[2] != "":
-        response = response.format(formatted_diff[2] + " " + formatted_diff[3])  # Min + Sec
+        response = response.format("{} {} {}".format(formatted_diff[0], formatted_diff[1], formatted_diff[2])) # Days Hours Minutes
     else:
-        response = response.format(formatted_diff[3])  # Sec
+        if formatted_diff[1] != "0 hours":
+            response = response.format("{} {}".format(formatted_diff[1], formatted_diff[2]))  # Hours Minutes
+        else:
+            if formatted_diff[2] != "0 minutes":
+                response = response.format("{} {}".format(formatted_diff[2], formatted_diff[3]))  # Minutes Seconds
+            else:
+                response = response.format(formatted_diff[3])  # Seconds
 
     await bot.say(response)
 

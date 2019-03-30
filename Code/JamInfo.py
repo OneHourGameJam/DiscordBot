@@ -143,7 +143,7 @@ def formatTime(time_diff: int):
     if time_diff < 0:  # timeDiff should never be negative in this function
         return "ERROR: Negative timeDiff"
 
-    response = ["", "", "", ""]  # Create an array of formatted times (DAYS HOURS MINUTES SECONDS)
+    response = ["", "0 hours", "0 minutes", "0 seconds"]  # Create an array of formatted times (DAYS HOURS MINUTES SECONDS)
 
     # Convert from seconds into days, hours, minutes and seconds
     m, s = divmod(time_diff, 60)
@@ -159,8 +159,7 @@ def formatTime(time_diff: int):
     if m == 1: response[2] = "1 minute"
     elif m > 1: response[2] = "{} minutes".format(m)
 
-    if s == 0: response[3] = "0 seconds"
-    elif s == 1: response[3] = "1 second"
+    if s == 1: response[3] = "1 second"
     elif s > 1: response[3] = "{} seconds".format(s)
 
     return response
