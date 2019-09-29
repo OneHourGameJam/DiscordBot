@@ -2,4 +2,14 @@
 
 The discord bot used in the 1hgj discord server.
 
-Install all of the modules, create a file called SecretKeys.py (see SecretKeys-example.py) and fill it with keys and run main.py
+# Installing
+
+### Install the dependencies with Pip
+
+```
+pip install -r requirements.txt
+```
+
+### Create a config file
+
+Create `config.json` (see `config-example.json`) and fill out the values.
