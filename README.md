@@ -13,3 +13,6 @@ pip install -r requirements.txt
 ### Create a config file
 
 Create `config.json` (see `config-example.json`) and fill out the values.
+
+# Running
+After completing the installation run `main.py`
