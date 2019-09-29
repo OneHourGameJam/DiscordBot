@@ -1,0 +1,6 @@
+{
+  "prefix" : "!",
+  "api_url" : "https://onehourgamejam.com/api/nextjam/",
+  "bot_token" : "TOKEN",
+  "debug_channel" : 10000000001
+}
