@@ -1,5 +1,5 @@
 import discord.ext.commands as commands
-from DiscordBot.commands import API
+from DiscordBot.commands import API, Static
 
 
 class Bot(commands.Bot):
@@ -11,6 +11,7 @@ class Bot(commands.Bot):
         super().__init__(commands.when_mentioned_or(prefix))
 
         self.add_cog(API(self))
+        self.add_cog(Static(self))
 
     async def on_ready(self):
         print('Logged on!')

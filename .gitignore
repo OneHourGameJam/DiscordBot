@@ -92,3 +92,4 @@ ENV/
 
 # One Hour Game Jam bot files
 config.json
+Logs/
