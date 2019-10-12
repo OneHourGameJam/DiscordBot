@@ -12,7 +12,7 @@ class API(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.bot.loop.create_task(self.announce_jam())
+        # self.bot.loop.create_task(self.announce_jam())
 
     def __get_api(self):
         page = requests.get(self.bot.file_manager.get_config('1hgj')['api_url'])
@@ -26,9 +26,12 @@ class API(commands.Cog):
 
             next_jam = backend.get_next_jam_date(api)
             seconds_left = (next_jam - dt.utcnow()).total_seconds()
-            # print(seconds_left)
 
-            await asyncio.sleep(60)
+            if seconds_left <= 3600:
+                last_announcement = self.bot.file_manager.get_local("last_announcement.txt")
+                print(last_announcement)
+
+            await asyncio.sleep(2)
 
     @command(aliases=['Time', "TIME", "timeleft", "timeLeft", "TIMELEFT", "Timeleft", "time_left"])
     async def time(self, ctx):
@@ -41,7 +44,7 @@ class API(commands.Cog):
         elif time_diff > 0:
             await ctx.send(f"{hf.format_timespan(time_diff)} left until the next jam.")
         else:
-            time_diff = 3600 - time_diff
+            time_diff = 3600 + time_diff
             await ctx.send(f"{hf.format_timespan(time_diff)} left.")
 
     @command(aliases=["Theme", "THEME"])
@@ -58,4 +61,4 @@ class API(commands.Cog):
     async def last_theme(self, ctx):
         api = self.__get_api()
         theme = backend.get_last_theme(api)
-        await ctx.send(f"The last theme was `{theme}`.")
+        await ctx.send(f"The last jam's theme was `{theme}`.")

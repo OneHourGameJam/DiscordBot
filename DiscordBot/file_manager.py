@@ -4,10 +4,10 @@ import os
 
 class FileManager:
     def __init__(self, config_path):
-        self.config_path = config_path
+        self.config_path = config_path + '/config.json'
         self.config = self.load_config()
 
-        self.local_path = os.path.join(config_path, self.get_config('settings')['local_path'])
+        self.local_path = config_path + self.get_config('settings')['local_path']
 
     def load_config(self):
         with open(self.config_path, 'r') as config:
@@ -25,4 +25,4 @@ class FileManager:
         path = os.path.join(self.local_path, file_name)
 
         with open(path, 'w+') as local:
-            return local
+            return local.read()
