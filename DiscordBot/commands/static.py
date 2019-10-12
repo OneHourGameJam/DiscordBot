@@ -8,7 +8,7 @@ class Static(commands.Cog):
 
     @property
     def commands(self):
-        return self.bot.config.get('static_commands')
+        return self.bot.config.get_config('static_commands')
 
     @command()
     async def about(self, ctx):

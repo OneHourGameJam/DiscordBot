@@ -1,2 +1,2 @@
 from .bot import *
-from .config_manager import *
+from .file_manager import *

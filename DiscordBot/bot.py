@@ -1,22 +1,21 @@
 import discord.ext.commands as commands
-from DiscordBot.commands import API, Static
+from DiscordBot.commands import API, Static, EasterEggs
 
 
 class Bot(commands.Bot):
 
-    def __init__(self, config):
-        self.config = config
-
-        prefix = self.config.get('prefix')
-        super().__init__(commands.when_mentioned_or(prefix))
+    def __init__(self, file_manager):
+        self.file_manager = file_manager
+        super().__init__(commands.when_mentioned_or(self.file_manager.get_config('settings')['prefix']))
 
         self.add_cog(API(self))
         self.add_cog(Static(self))
+        self.add_cog(EasterEggs(self))
 
     async def on_ready(self):
         print('Logged on!')
 
-        c_id = self.config.get('debug_channel')
-        if c_id is not None:
-            channel = self.get_channel(c_id)
-            await channel.send('Hello there')
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            return
+        raise error

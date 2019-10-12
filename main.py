@@ -1,7 +1,7 @@
 import DiscordBot as DB
 import os
 
-config = DB.ConfigManager(os.path.dirname(os.path.abspath(__file__)) + '/config.json')
-bot = DB.Bot(config)
+file_manager = DB.FileManager(os.path.dirname(os.path.abspath(__file__)) + '/config.json')
+bot = DB.Bot(file_manager)
 
-bot.run(config.get('bot_token'))
+bot.run(file_manager.get_config('settings')['bot_token'])
