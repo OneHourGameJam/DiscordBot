@@ -1,5 +1,5 @@
 import discord.ext.commands as commands
-from DiscordBot.commands import API, Static, EasterEggs
+from DiscordBot.commands import API, Static, EasterEggs, RandomTheme
 
 
 class Bot(commands.Bot):
@@ -11,6 +11,7 @@ class Bot(commands.Bot):
         self.add_cog(API(self))
         self.add_cog(Static(self))
         self.add_cog(EasterEggs(self))
+        self.add_cog(RandomTheme(self))
 
     async def on_ready(self):
         print('Logged on!')
