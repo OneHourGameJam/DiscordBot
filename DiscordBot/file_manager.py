@@ -7,7 +7,7 @@ class FileManager:
         self.config_path = config_path + '/config.json'
         self.config = self.load_config()
 
-        self.local_path = config_path + self.get_config('settings')['local_path']
+        self.local_path = config_path + '/__local__'
 
     def load_config(self):
         with open(self.config_path, 'r') as config:
@@ -21,8 +21,16 @@ class FileManager:
             return None
         return self.config[item]
 
-    def get_local(self, file_name):
+    def read_local(self, file_name):
         path = os.path.join(self.local_path, file_name)
+        mode = 'r' if os.path.isfile(path) else 'w+'
 
-        with open(path, 'w+') as local:
+        with open(path, mode) as local:
             return local.read()
+
+    def write_local(self, file_name, contents, append=True):
+        path = os.path.join(self.local_path, file_name)
+        mode = 'a+' if append else 'w+'
+
+        with open(path, mode) as local:
+            local.write(contents)

@@ -12,7 +12,7 @@ class API(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        # self.bot.loop.create_task(self.announce_jam())
+        self.bot.loop.create_task(self.announce_jam())
 
     def __get_api(self):
         page = requests.get(self.bot.file_manager.get_config('1hgj')['api_url'])
@@ -24,14 +24,29 @@ class API(commands.Cog):
         while not self.bot.is_closed():
             api = self.__get_api()
 
+            now = backend.get_time(api)
             next_jam = backend.get_next_jam_date(api)
-            seconds_left = (next_jam - dt.utcnow()).total_seconds()
+            seconds_left = (next_jam - now).total_seconds()
 
             if seconds_left <= 3600:
-                last_announcement = self.bot.file_manager.get_local("last_announcement.txt")
-                print(last_announcement)
+                last_announcement = self.bot.file_manager.read_local('last_announcement.txt')
+                announce = False
 
-            await asyncio.sleep(2)
+                if last_announcement == '':
+                    announce = True
+                else:
+                    last_date = dt.strptime(last_announcement, '%Y-%m-%d %H:%M:%S')
+                    if (now - last_date).total_seconds() > 3600:
+                        announce = True
+
+                if announce:
+                    self.bot.file_manager.write_local('last_announcement.txt',
+                                                      dt.strftime(now, '%Y-%m-%d %H:%M:%S'), append=False)
+
+                    channel = self.bot.get_channel(self.bot.file_manager.get_config('settings')['announcement_channel'])
+                    await channel.send('@everyone One Hour Game Jam starts within an hour!')
+
+            await asyncio.sleep(60)
 
     @command(aliases=['Time', "TIME", "timeleft", "timeLeft", "TIMELEFT", "Timeleft", "time_left"])
     async def time(self, ctx):

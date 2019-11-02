@@ -1,8 +1,15 @@
 {
-  "prefix" : "!",
-  "api_url" : "https://onehourgamejam.com/api/nextjam/",
-  "bot_token" : "TOKEN",
-  "debug_channel" : 100000001,
+  "settings": {
+    "prefix" : "!",
+    "bot_token" : "TOKEN",
+    "debug_channel" : 100000000000000000,
+    "announcement_channel" : 100000000000000000
+  },
+
+  "1hgj": {
+    "api_url" : "https://onehourgamejam.com/api/nextjam/"
+  },
+
   "static_commands" : {
     "about" : "The One Hour Game Jam occurs every Saturday at 20:00 UTC and ends at 21:00 UTC. You have until the next jam to submit your game.\nJoin us, learn and have fun!",
     "rules" : "Rules and FAQ: https://onehourgamejam.com/?page=rules",
@@ -10,5 +17,10 @@
     "submit" : "Submit your game here: https://onehourgamejam.com/?page=submit *if you don't have an account yet, type __!login__*",
     "login" : "If you don't have an account yet or if you haven't logged in go here: https://onehourgamejam.com/?page=login",
     "github_issues" : "https://github.com/OneHourGameJam/DiscordBot/issues"
+  },
+
+  "easter_eggs": {
+    "hype_links" : ["https://i.imgur.com/MzxqQsG.png", "https://youtu.be/gMkrvTraVZ0", "http://youtu.be/lSxh-UK7Ays",
+                    "https://i.imgur.com/60goX0t.mp4", "https://youtu.be/zpGU355C0ak", "https://youtu.be/s6E3xVz01bw"]
   }
 }
