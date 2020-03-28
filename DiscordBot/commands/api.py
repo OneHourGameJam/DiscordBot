@@ -47,7 +47,8 @@ class API(commands.Cog):
                     await channel.send('@everyone One Hour Game Jam starts within an hour!')
 
             # Announce the theme when the Jam starts
-            if seconds_left == 0:
+            time_diff = backend.get_time_diff(api)
+            if time_diff == 0:
                 channel = self.bot.get_channel(self.bot.file_manager.get_config('settings')['announcement_channel'])
                 nth = backend.to_ordinal(backend.get_jam_number(api))
                 theme = backend.get_theme(api)
@@ -55,8 +56,15 @@ class API(commands.Cog):
                     await channel.send(f"@everyone The {nth} One Hour Game Jam starts now!")
                 else:
                     await channel.send(f"@everyone The {nth} One Hour Game Jam starts now! The theme is `{theme}`!")
-
-            await asyncio.sleep(60)
+                # sleep a few seconds to make sure time difference isn't 0 again
+                await asyncio.sleep(5)
+            
+            # Not sure how accurate these sleeps are
+            # So start sleeping 1 second when < 1 minute away
+            if seconds_left >= 120:
+                await asyncio.sleep(60)
+            else:
+                await asyncio.sleep(1)
 
     @command(aliases=['Time', "TIME", "timeleft", "timeLeft", "TIMELEFT", "Timeleft", "time_left"])
     async def time(self, ctx):
