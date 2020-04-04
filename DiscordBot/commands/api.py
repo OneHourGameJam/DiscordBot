@@ -53,9 +53,9 @@ class API(commands.Cog):
                 nth = backend.to_ordinal(backend.get_jam_number(api))
                 theme = backend.get_theme(api)
                 if theme is None:
-                    await channel.send(f"@everyone The {nth} One Hour Game Jam starts now!")
+                    await channel.send(f"The {nth} One Hour Game Jam starts now!")
                 else:
-                    await channel.send(f"@everyone The {nth} One Hour Game Jam starts now! The theme is `{theme}`!")
+                    await channel.send(f"The {nth} One Hour Game Jam starts now! The theme is `{theme}`!")
                 # sleep a few seconds to make sure time difference isn't 0 again
                 await asyncio.sleep(5)
             
