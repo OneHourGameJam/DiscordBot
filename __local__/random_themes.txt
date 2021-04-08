@@ -65,7 +65,6 @@ mash up
 match 4
 mine
 modern aliens
-module.exports
 mondays
 myst clone
 nicktoons
@@ -138,3 +137,6 @@ you are two dogs
 you are what you eat
 you can wear a bunch of different hats
 shrek
+christmas
+santa
+pollution
