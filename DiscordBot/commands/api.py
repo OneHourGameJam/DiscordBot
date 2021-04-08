@@ -6,6 +6,7 @@ from datetime import datetime as dt
 from discord.ext import commands
 from discord.ext.commands import command
 import DiscordBot.backend as backend
+from discord_slash import cog_ext
 
 
 class API(commands.Cog):
@@ -44,12 +45,11 @@ class API(commands.Cog):
                                                       dt.strftime(now, '%Y-%m-%d %H:%M:%S'), append=False)
 
                     channel = self.bot.get_channel(self.bot.file_manager.get_config('settings')['announcement_channel'])
-                    await channel.send('@everyone One Hour Game Jam starts within an hour!')
+                    await channel.send('@everyone One Hour Game Jam starts in an hour!')
 
             await asyncio.sleep(60)
 
-    @command(aliases=['Time', "TIME", "timeleft", "timeLeft", "TIMELEFT", "Timeleft", "time_left"])
-    async def time(self, ctx):
+    async def get_time(self, ctx):
         api = self.__get_api()
         time_diff = backend.get_time_diff(api)
 
@@ -62,8 +62,7 @@ class API(commands.Cog):
             time_diff = 3600 + time_diff
             await ctx.send(f"{hf.format_timespan(time_diff)} left.")
 
-    @command(aliases=["Theme", "THEME"])
-    async def theme(self, ctx):
+    async def get_theme(self, ctx):
         api = self.__get_api()
         theme = backend.get_theme(api)
 
@@ -72,8 +71,31 @@ class API(commands.Cog):
         else:
             await ctx.send(f"The theme is `{theme}`!")
 
-    @command(aliases=["lasttheme", "LastTheme", "lastTheme"])
-    async def last_theme(self, ctx):
+    async def get_last_theme(self, ctx):
         api = self.__get_api()
         theme = backend.get_last_theme(api)
         await ctx.send(f"The last jam's theme was `{theme}`.")
+
+    @cog_ext.cog_slash(name="time", description="The time until the next jam / The time until the ongoing jam ends")
+    async def _time(self, ctx):
+        await self.get_time(ctx)
+
+    @cog_ext.cog_slash(name="theme", description="The ongoing jam's theme")
+    async def _theme(self, ctx):
+        await self.get_theme(ctx)
+
+    @cog_ext.cog_slash(name="last_theme", description="The theme from the previous jam")
+    async def _last_theme(self, ctx):
+        await self.get_last_theme(ctx)
+
+    @command(aliases=['Time', "TIME", "timeleft", "timeLeft", "TIMELEFT", "Timeleft", "time_left"])
+    async def time(self, ctx):
+        await self.get_time(ctx)
+
+    @command(aliases=["Theme", "THEME"])
+    async def theme(self, ctx):
+        await self.get_theme(ctx)
+
+    @command(aliases=["lasttheme", "LastTheme", "lastTheme"])
+    async def last_theme(self, ctx):
+        await self.get_last_theme(ctx)

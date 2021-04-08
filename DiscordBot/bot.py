@@ -8,6 +8,7 @@ class Bot(commands.Bot):
         self.file_manager = file_manager
         super().__init__(commands.when_mentioned_or(self.file_manager.get_config('settings')['prefix']))
 
+    def add_cogs(self):
         self.add_cog(API(self))
         self.add_cog(Static(self))
         self.add_cog(EasterEggs(self))
