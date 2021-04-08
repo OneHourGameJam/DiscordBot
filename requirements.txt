@@ -1,4 +1,4 @@
-discord.py==1.*
-requests==2.22.*
-humanfriendly==4.18
-discord_slash==1.*
+discord.py>=1.7.0
+requests>=2.22.0
+humanfriendly>=4.18
+discord-py-slash-command>=1.1.0
